@@ -16,7 +16,7 @@ export const Title = styled.div`
     margin-top: 3rem;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #399D76;
+    color: #fff;
 `;
 
 export const CriarEventoButton = styled.input`
@@ -44,7 +44,7 @@ export const EventosContent = styled.div`
 `;
 
 export const Evento = styled.div`
-    background: #399D76;
+    background: #FF7815;
     border: 2px solid #212127;
     border-radius: 10px;
     color: #fff;
@@ -75,7 +75,7 @@ export const VagasEvento = styled.div`
 export const ModalidadeEvento = styled.div`
     padding: 0.5rem;
     transition: 0.5s;
-    background: #399D76;
+    background: #FF7815;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -87,5 +87,5 @@ export const DisplayFlex = styled.div`
     display: flex;
     justify-content: center;
     gap: 2rem;
-    border-bottom: 1px solid #338c68;
+    border-bottom: 1px solid #ffa562;
 `;

@@ -18,14 +18,14 @@ export const Perfil = () => {
                 <AlterarFoto type="file" accept="image/png, image/jpg, image/gif, image/jpeg" />
             </Column>
             <Column>
-                <Nome>Germán Ezequiel Cano Recalde</Nome>
-                <Email>canoL14@gmail.com</Email>
+                <Nome><strong>Nome:</strong> Germán Ezequiel Cano Recalde</Nome>
+                <Email><strong>Email:</strong> canoL14@gmail.com</Email>
             </Column>
         </Content>
         <SegundoContent>
             <AlterarInformacoes>Alterar Informações</AlterarInformacoes>
-            <AlterarSenha>Alterar Senha</AlterarSenha>
-            <ExcluirPerfil>Excluir Perfil</ExcluirPerfil>
+            {/* <AlterarSenha>Alterar Senha</AlterarSenha>
+            <ExcluirPerfil>Excluir Perfil</ExcluirPerfil> */}
             <GerenciarEventos>Gerenciar Eventos</GerenciarEventos>
         </SegundoContent>
     </Container>

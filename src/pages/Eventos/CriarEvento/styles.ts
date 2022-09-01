@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
+
+
 export const Container = styled.div`
     width: 100%;
+
 `;
 
 export const CadastroContainer = styled.form`
@@ -14,8 +17,6 @@ export const CadastroContainer = styled.form`
     margin-top: 4rem;
     border-radius: 15px;
     background: #e0e0e0;
-    box-shadow:  5px 5px 10px #5a5a5a,
-                -5px -5px 10px #ffffff;
 `;
 
 export const Title = styled.div`
@@ -23,7 +24,7 @@ export const Title = styled.div`
     margin-bottom: 16px;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #399D76;
+    color: #FF7815;
 `;
 
 export const DisplayFlex = styled.div`
@@ -79,6 +80,13 @@ export const Modalidade = styled.input`
     border: 0;
     width: 50%;
 `;
+export const Descricao = styled.textarea`
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 15px;
+    border: 0;
+    width: 50%;
+`;
 
 export const SignupButton = styled.input`
     padding: 10px;
@@ -87,7 +95,7 @@ export const SignupButton = styled.input`
     margin-top: 3rem;
     width: 47%;
     border: 0;
-    background: #399D76;
+    background: #FF7815;
     color: #fff;
     font-size: 1.1rem;
     transition: 0.5s;

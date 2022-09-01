@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
+    min-height: 100vh;
 `;
 
 export const LoginContainer = styled.form`
@@ -14,9 +15,7 @@ export const LoginContainer = styled.form`
     background-color: #fff;
     margin-top: 5rem;
     border-radius: 15px;
-    background: #e0e0e0;
-    box-shadow:  5px 5px 10px #5a5a5a,
-                -5px -5px 10px #ffffff;
+    background: #e9e9e9;
 `;
 
 export const Title = styled.div`
@@ -24,7 +23,7 @@ export const Title = styled.div`
     margin-bottom: 32px;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #399D76;
+    color: #FF7815;
 `;
 
 export const SubTitle = styled.div`
@@ -77,7 +76,7 @@ export const LoginButton = styled.input`
     margin-top: 3rem;
     width: 47%;
     border: 0;
-    background: #399D76;
+    background: #FF7815;
     color: #fff;
     font-size: 1.1rem;
     transition: 0.5s;

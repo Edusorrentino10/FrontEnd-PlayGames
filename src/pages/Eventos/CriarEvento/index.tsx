@@ -1,8 +1,9 @@
 import { Header } from '../../../components/Header';
-import { CadastroContainer, Local, Container, Data, Nome, SignupButton, Title, Vagas, Modalidade, DisplayFlex, Hora } from './styles';
+import { CadastroContainer, Local, Container, Data, Nome, SignupButton, Title, Vagas, Modalidade, DisplayFlex, Hora, Descricao } from './styles';
 import { useNavigate } from 'react-router-dom';
 
 export const CriarEvento = () => {
+
 
     const navigate = useNavigate();
 
@@ -17,8 +18,9 @@ export const CriarEvento = () => {
                     <Hora type="time" required />
                 </DisplayFlex>
                 <Vagas placeholder="Vagas" type="number" required />
-                <Local placeholder="Local" type="text" required />
-                <Modalidade placeholder="Modalidade" type="text" required />
+                <Descricao placeholder="Descrição" required />
+                {/* <Local placeholder="Local" type="text" required />
+                <Modalidade placeholder="Modalidade" type="text" required /> */}
                 <SignupButton value="Criar" type="submit" onClick={(e) => { e.preventDefault(); navigate('/eventos') }}></SignupButton>
             </CadastroContainer>
         </Container>
