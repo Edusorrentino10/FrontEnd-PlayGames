@@ -1,4 +1,4 @@
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import { CadastroContainer, ConfirmarSenha, Container, Email, Nome, Senha, SignupButton, SubTitle, Title } from './styles';
 import { useNavigate } from 'react-router-dom';
 

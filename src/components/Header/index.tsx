@@ -10,7 +10,7 @@ export const Header = () => {
             <Title>Play Games</Title>
             <Menu>
                 <Perfil onClick={() => navigate('/perfil')}>Perfil</Perfil>
-                <Equipe>Equipe</Equipe>
+                <Equipe onClick={() => navigate('/equipes')}>Equipe</Equipe>
                 <Eventos onClick={() => navigate('/eventos')}>Eventos</Eventos>
             </Menu>
         </Container>

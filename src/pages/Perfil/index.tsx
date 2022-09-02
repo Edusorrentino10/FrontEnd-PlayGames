@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { AlterarFoto, AlterarInformacoes, AlterarSenha, Column, Container, Content, Email, ExcluirPerfil, Foto, GerenciarEventos, Nome, Title, SegundoContent } from './styles';
 
@@ -6,7 +7,7 @@ import { AlterarFoto, AlterarInformacoes, AlterarSenha, Column, Container, Conte
 
 export const Perfil = () => {
 
-
+    const navigate = useNavigate();
     
     return (
     <Container>
@@ -23,7 +24,7 @@ export const Perfil = () => {
             </Column>
         </Content>
         <SegundoContent>
-            <AlterarInformacoes>Alterar Informações</AlterarInformacoes>
+            <AlterarInformacoes onClick={() => navigate('/configuracoes')}>Alterar Informações</AlterarInformacoes>
             {/* <AlterarSenha>Alterar Senha</AlterarSenha>
             <ExcluirPerfil>Excluir Perfil</ExcluirPerfil> */}
             <GerenciarEventos>Gerenciar Eventos</GerenciarEventos>

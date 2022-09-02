@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import { Container, Content, ContinueButton, InputEmail, Seta } from './styles';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 

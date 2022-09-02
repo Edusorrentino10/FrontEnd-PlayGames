@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import { Cadastrar, Container, Email, EsqueceuSenha, LoginButton, LoginContainer, Senha, SubTitle, Title } from './styles';
 
 export const Login = () => {

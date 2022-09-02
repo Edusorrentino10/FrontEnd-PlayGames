@@ -39,8 +39,8 @@ export const Seta = styled.div`
         font-size: 2rem;
         font-weight: bold;
         margin: auto;
-        margin-left: 3rem;
-        color: #262626;
+        margin-left: 4rem;
+        color: #FF7815;
     }
 `;
 
@@ -50,6 +50,14 @@ export const InputEmail = styled.input`
     padding: 0.6rem;
     border: 1px solid #ccc;
     margin-top: 4rem;
+`;
+
+export const InputDescricao = styled.textarea`
+    width: 66%;
+    border-radius: 0.7rem;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    margin-top: 1rem;
 `;
 
 
