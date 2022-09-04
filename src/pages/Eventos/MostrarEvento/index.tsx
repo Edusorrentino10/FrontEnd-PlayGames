@@ -1,5 +1,5 @@
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, FilterEvents, FilterOptions, FutebolFilter, VoleiFilter, FifaFilter, CSFilter } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, FilterEvents, FilterOptions, FutebolFilter, VoleiFilter, FifaFilter, CSFilter, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -7,10 +7,71 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
+import vslogo from '../../../assets/VSlogo.png';
+import Modal from 'react-modal';
+
+
+
+const customStylesModal = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)',
+        background: '#e0e0e0',
+        borderRadius: '0.3rem',
+        padding: 0,
+        border: '2px solid #ff7815'
+    },
+    overlay: {
+        background: 'rgba(28, 28, 28, 0.75)',
+    }
+};
+
 
 export const MostrarEvento = () => {
 
     const navigate = useNavigate();
+
+
+    const [openModalFifa, setModalFifa] = useState(false);
+    const handleCloseModalFifa = () => {
+        setModalFifa(false);
+    }
+    const handleOpenModalFifa = () => {
+        setModalFifa(true);
+    }
+
+
+    const [openModalFutebol, setModalFutebol] = useState(false);
+    const handleCloseModalFutebol = () => {
+        setModalFutebol(false);
+    }
+    const handleOpenModalFutebol = () => {
+        setModalFutebol(true);
+    }
+
+
+    const [openModalCS, setModalCS] = useState(false);
+    const handleCloseModalCS = () => {
+        setModalCS(false);
+    }
+    const handleOpenModalCS = () => {
+        setModalCS(true);
+    }
+
+
+    const [openModalVolei, setModalVolei] = useState(false);
+    const handleCloseModalVolei = () => {
+        setModalVolei(false);
+    }
+    const handleOpenModalVolei = () => {
+        setModalVolei(true);
+    }
+
+
+
 
     const listaEventos = [{
         nome: 'PROZAO',
@@ -19,6 +80,8 @@ export const MostrarEvento = () => {
         local: 'PC',
         modalidade: 'FIFA',
         vagas: 11,
+        nomeEquipe: 'Viciados em Vencer',
+        jogadores: ['Taffarell', 'Dani Alves', 'Thiago Silva', 'Gum', 'Marcelo', 'Deco', 'Zidane', 'Voice', 'Vini JR', 'Neymar', 'Raphinha']
     },
     {
         nome: 'FutePorco',
@@ -27,6 +90,9 @@ export const MostrarEvento = () => {
         local: 'Arena Porco',
         modalidade: 'Futebol',
         vagas: 11,
+        nomeEquipe: 'Viciados em Derrota',
+        jogadores: ['Neuer', 'Bruno', 'Marcelo Bechler', 'Isa Pagliari', 'Alê', 'Ricardinho', 'Caio Castro', 'Luizinho', 'Beltrão', 'Certezas', 'Cazé']
+
     },
     {
         nome: 'CS 5X5',
@@ -35,6 +101,9 @@ export const MostrarEvento = () => {
         local: 'PC',
         modalidade: 'Counter-Strike',
         vagas: 5,
+        nomeEquipe: 'Só morremo',
+        jogadores: ['Fallen', 'Gotze', 'Verstappen', 'Heráclito', 'Lebron James']
+
     },
     {
         nome: 'Voleizin',
@@ -42,7 +111,9 @@ export const MostrarEvento = () => {
         data: '03/09',
         local: 'Miami',
         modalidade: 'Volei',
-        vagas: 12,
+        vagas: 6,
+        nomeEquipe: 'Viciados em Derrotas',
+        jogadores: ['Giba', 'Lucarelli', 'Bolsonaro', 'Viih Tube', 'Wellington Rato', 'Lula']
     }
     ];
 
@@ -74,58 +145,187 @@ export const MostrarEvento = () => {
             </Content>
             <EventosContent>
                 {listaEventos.map((evento, key) => evento.modalidade === 'Futebol' && futebolSelected &&
-                    <Evento key={key}>
-                        <DisplayFlex>
-                            <NomeEvento>{evento.nome}</NomeEvento>
-                            <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                        </DisplayFlex>
-                        <LocalEvento>{evento.local}</LocalEvento>
-                        <ModalidadeEvento>{evento.modalidade}
-                            <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                        </ModalidadeEvento>
-                        <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                    </Evento>
+                    <div>
+                        <Evento key={key} onClick={handleOpenModalFutebol}>
+                            <DisplayFlex>
+                                <NomeEvento>{evento.nome}</NomeEvento>
+                                <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                            </DisplayFlex>
+                            <LocalEvento>{evento.local}</LocalEvento>
+                            <ModalidadeEvento>{evento.modalidade}
+                                <GiSoccerBall style={{ marginLeft: '1rem' }} />
+                            </ModalidadeEvento>
+                            <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                        </Evento>
+                        <ModalContent key={key}>
+                            <Modal
+                                isOpen={openModalFutebol}
+                                onRequestClose={handleCloseModalFutebol}
+                                style={customStylesModal}
+                                contentLabel="Example Modal"
+                            >
+                                <TitleModal>{evento.nome}</TitleModal>
+                                <HorarioModal>{evento.horario}</HorarioModal>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ImgModal src={vslogo} alt="" />
+                                </div>
+                                <DivEquipes>
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
+                                        <div>
+                                            {evento.jogadores.map((jogador, key) => 
+                                                <p key={key}>{jogador}</p>
+                                            )}
+                                        </div>
+                                    </fieldset>
+                                    {/** Time Visitante */}
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>
+                                        <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>
+                                    </fieldset>
+                                </DivEquipes>
+                                <ModalButton onClick={handleCloseModalFutebol}>Fechar</ModalButton>
+                            </Modal>
+                        </ModalContent>
+                    </div>
                 )}
                 {listaEventos.map((evento, key) => evento.modalidade === 'Volei' && voleiSelected &&
-                    <Evento key={key}>
-                        <DisplayFlex>
-                            <NomeEvento>{evento.nome}</NomeEvento>
-                            <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                        </DisplayFlex>
-                        <LocalEvento>{evento.local}</LocalEvento>
-                        <ModalidadeEvento>{evento.modalidade}
-                            <GiVolleyballBall style={{ marginLeft: '1rem' }} />
-                        </ModalidadeEvento>
-                        <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                    </Evento>
+                    <div>
+                        <Evento key={key} onClick={handleOpenModalVolei}>
+                            <DisplayFlex>
+                                <NomeEvento>{evento.nome}</NomeEvento>
+                                <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                            </DisplayFlex>
+                            <LocalEvento>{evento.local}</LocalEvento>
+                            <ModalidadeEvento>{evento.modalidade}
+                                <GiVolleyballBall style={{ marginLeft: '1rem' }} />
+                            </ModalidadeEvento>
+                            <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                        </Evento>
+                        <ModalContent>
+                            <Modal
+                                isOpen={openModalVolei}
+                                onRequestClose={handleCloseModalVolei}
+                                style={customStylesModal}
+                                contentLabel="Example Modal"
+                            >
+                                <TitleModal>{evento.nome}</TitleModal>
+                                <HorarioModal>{evento.horario}</HorarioModal>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ImgModal src={vslogo} alt="" />
+                                </div>
+                                <DivEquipes>
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
+                                        <div>
+                                            {evento.jogadores.map((jogador, key) => 
+                                                <p key={key}>{jogador}</p>
+                                            )}
+                                        </div>
+                                    </fieldset>
+                                    {/** Time Visitante */}
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>
+                                        <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>
+                                    </fieldset>
+                                </DivEquipes>
+                                <ModalButton onClick={handleCloseModalVolei}>Fechar</ModalButton>
+                            </Modal>
+                        </ModalContent>
+                    </div>
                 )}
                 {listaEventos.map((evento, key) => evento.modalidade === 'FIFA' && fifaSelected &&
-                    <Evento key={key}>
-                        <DisplayFlex>
-                            <NomeEvento>{evento.nome}</NomeEvento>
-                            <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                        </DisplayFlex>
-                        <LocalEvento>{evento.local}</LocalEvento>
-                        <ModalidadeEvento>{evento.modalidade}
-                            <RiComputerLine style={{ marginLeft: '1rem' }} />
-                        </ModalidadeEvento>
-                        <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                    </Evento>
+                    <div>
+                        <Evento key={key} onClick={handleOpenModalFifa}>
+                            <DisplayFlex>
+                                <NomeEvento>{evento.nome}</NomeEvento>
+                                <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                            </DisplayFlex>
+                            <LocalEvento>{evento.local}</LocalEvento>
+                            <ModalidadeEvento>{evento.modalidade}
+                                <RiComputerLine style={{ marginLeft: '1rem' }} />
+                            </ModalidadeEvento>
+                            <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                        </Evento>
+                        <ModalContent>
+                            <Modal
+                                isOpen={openModalFifa}
+                                onRequestClose={handleCloseModalFifa}
+                                style={customStylesModal}
+                                contentLabel="Example Modal"
+                            >
+                                <TitleModal>{evento.nome}</TitleModal>
+                                <HorarioModal>{evento.horario}</HorarioModal>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ImgModal src={vslogo} alt="" />
+                                </div>
+                                <DivEquipes>
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
+                                        <div>
+                                            {evento.jogadores.map((jogador, key) => 
+                                                <p key={key}>{jogador}</p>
+                                            )}
+                                        </div>
+                                    </fieldset>
+                                    {/** Time Visitante */}
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>
+                                        <button onClick={(e) => { e.preventDefault(); }}>Inscrever Equipe</button>
+                                    </fieldset>
+                                </DivEquipes>
+                                <ModalButton onClick={handleCloseModalFifa}>Fechar</ModalButton>
+                            </Modal>
+                        </ModalContent>
+                    </div>
                 )}
                 {listaEventos.map((evento, key) => evento.modalidade === 'Counter-Strike' && csSelected &&
-                    <Evento key={key}>
-                        <DisplayFlex>
-                            <NomeEvento>{evento.nome}</NomeEvento>
-                            <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                        </DisplayFlex>
-                        <LocalEvento>{evento.local}</LocalEvento>
-                        <ModalidadeEvento>{evento.modalidade}
-                            <RiComputerLine style={{ marginLeft: '1rem' }} />
-                        </ModalidadeEvento>
-                        <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                    </Evento>
+                    <div>
+                        <Evento key={key} onClick={handleOpenModalCS}>
+                            <DisplayFlex>
+                                <NomeEvento>{evento.nome}</NomeEvento>
+                                <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                            </DisplayFlex>
+                            <LocalEvento>{evento.local}</LocalEvento>
+                            <ModalidadeEvento>{evento.modalidade}
+                                <RiComputerLine style={{ marginLeft: '1rem' }} />
+                            </ModalidadeEvento>
+                            <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                        </Evento>
+                        <ModalContent>
+                            <Modal
+                                isOpen={openModalCS}
+                                onRequestClose={handleCloseModalCS}
+                                style={customStylesModal}
+                                contentLabel="Example Modal"
+                            >
+                                <TitleModal>{evento.nome}</TitleModal>
+                                <HorarioModal>{evento.horario}</HorarioModal>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <ImgModal src={vslogo} alt="" />
+                                </div>
+                                <DivEquipes>
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
+                                        <div>
+                                            {evento.jogadores.map((jogador, key) => 
+                                                <p key={key}>{jogador}</p>
+                                            )}
+                                        </div>
+                                    </fieldset>
+                                    {/** Time Visitante */}
+                                    <fieldset style={{ border: '3px solid #ffa562' }}>
+                                        <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>
+                                        <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>
+                                    </fieldset>
+                                </DivEquipes>
+                                <ModalButton onClick={handleCloseModalCS}>Fechar</ModalButton>
+                            </Modal>
+                        </ModalContent>
+                    </div>
                 )}
             </EventosContent>
         </Container>
     )
 }
+

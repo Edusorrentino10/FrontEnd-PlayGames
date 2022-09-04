@@ -157,3 +157,77 @@ export const CSFilter = styled.div<{ isActive: boolean }>`
         background-color: ${props => props.isActive ? '' : '#ebebed'};
     }
 `;
+
+export const ModalContent = styled.div`
+    position: relative;
+`;
+
+export const TitleModal = styled.div`
+    border-bottom: 0.5px solid #ffa562;
+    padding: 1rem 10rem 0rem 10rem;
+    text-align: center;
+    background-color: #ff7815;
+    color: #e0e0e0;
+    font-size: 3rem;
+    font-weight: 600;
+`;
+export const HorarioModal = styled.div`
+    border-bottom: 3px solid #ffa562;
+    text-align: center;
+    background-color: #ff7815;
+    color: #e0e0e0;
+    font-size: 2rem;
+    font-weight: 450;
+`;
+
+export const ImgModal = styled.img`
+    text-align: center;
+    padding: 1rem;
+    width: 55px;
+
+`;
+
+export const ModalButton = styled.button`
+    background-color: #ff7815;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid #ff7815;
+    border-radius: 0.3rem;
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 2.5rem;
+    float: right;
+    transition: 0.5s;
+    cursor: pointer;
+    &:hover {
+        filter: brightness(0.93);
+    }
+    
+`;
+
+export const DivEquipes = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 0.3rem 2rem;
+    gap: 2rem;
+    fieldset {
+        padding: 0.8rem 5rem;
+        legend {
+            cursor: context-menu;
+            text-align: center;
+        }
+        
+        p {
+            text-align: center;
+            font-weight: 500;
+            color: #3e3e3e;
+            cursor: context-menu;
+            
+        }
+        button {
+            margin-top: 5rem;
+            padding: 1rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    }
+`;
