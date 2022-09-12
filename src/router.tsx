@@ -8,6 +8,7 @@ import { MostrarEquipe } from './pages/Equipes/MostrarEquipes';
 import { Perfil } from './pages/Perfil';
 import { CriarEquipe } from './pages/Equipes/CriarEquipe';
 import { Configuracoes } from './pages/Configuracoes';
+import { GerenciarEventos } from './pages/GerenciarEventos';
 
 
 export const Router = () => {
@@ -25,6 +26,7 @@ export const Router = () => {
                 <Route path="/criar-equipe" element={<CriarEquipe />} />          
                 <Route path="/configuracoes" element={<Configuracoes />} />   
                 <Route path="/perfil" element={<Perfil />} />
+                <Route path="/gerenciar-eventos" element={<GerenciarEventos />} />
             </Routes>
         </BrowserRouter>
     )

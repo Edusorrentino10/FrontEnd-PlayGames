@@ -18,9 +18,9 @@ export const CriarEvento = () => {
                     <Hora type="time" required />
                 </DisplayFlex>
                 <Vagas placeholder="Vagas" type="number" required />
-                <Descricao placeholder="Descrição" required />
-                {/* <Local placeholder="Local" type="text" required />
-                <Modalidade placeholder="Modalidade" type="text" required /> */}
+                <Local placeholder="Local" type="text" required />
+                <Descricao placeholder="Descrição" required />   
+                {/*<Modalidade placeholder="Modalidade" type="text" required /> */}
                 <SignupButton value="Criar" type="submit" onClick={(e) => { e.preventDefault(); navigate('/eventos') }}></SignupButton>
             </CadastroContainer>
         </Container>

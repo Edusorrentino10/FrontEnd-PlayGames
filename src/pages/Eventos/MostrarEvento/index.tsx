@@ -1,5 +1,5 @@
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, FilterEvents, FilterOptions, FutebolFilter, VoleiFilter, FifaFilter, CSFilter, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, FilterEvents, FilterOptions, FutebolFilter, VoleiFilter, FifaFilter, CSFilter, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -81,8 +81,10 @@ export const MostrarEvento = () => {
         modalidade: 'FIFA',
         vagas: 11,
         nomeEquipe: 'Viciados em Vencer',
-        jogadores: ['Taffarell', 'Dani Alves', 'Thiago Silva', 'Gum', 'Marcelo', 'Deco', 'Zidane', 'Voice', 'Vini JR', 'Neymar', 'Raphinha']
+        jogadores: ['Taffarell', 'Dani Alves', 'Thiago Silva', 'Gum', 'Marcelo', 'Deco', 'Zidane', 'Voice', 'Vini JR', 'Neymar', 'Raphinha'],
+        descricao: 'Exemplo de descrição'
     },
+
     {
         nome: 'FutePorco',
         horario: '21:00',
@@ -91,7 +93,8 @@ export const MostrarEvento = () => {
         modalidade: 'Futebol',
         vagas: 11,
         nomeEquipe: 'Viciados em Derrota',
-        jogadores: ['Neuer', 'Bruno', 'Marcelo Bechler', 'Isa Pagliari', 'Alê', 'Ricardinho', 'Caio Castro', 'Luizinho', 'Beltrão', 'Certezas', 'Cazé']
+        jogadores: ['Neuer', 'Bruno', 'Marcelo Bechler', 'Isa Pagliari', 'Alê', 'Ricardinho', 'Caio Castro', 'Luizinho', 'Beltrão', 'Certezas', 'Cazé'],
+        descricao: 'Exemplo de descrição'
 
     },
     {
@@ -102,7 +105,8 @@ export const MostrarEvento = () => {
         modalidade: 'Counter-Strike',
         vagas: 5,
         nomeEquipe: 'Só morremo',
-        jogadores: ['Fallen', 'Gotze', 'Verstappen', 'Heráclito', 'Lebron James']
+        jogadores: ['Fallen', 'Gotze', 'Verstappen', 'Heráclito', 'Lebron James'],
+        descricao: 'Exemplo de descrição Exemplo de descrição Exemplo de descrição Exemplo de descrição Exemplo de descrição'
 
     },
     {
@@ -113,7 +117,8 @@ export const MostrarEvento = () => {
         modalidade: 'Volei',
         vagas: 6,
         nomeEquipe: 'Viciados em Derrotas',
-        jogadores: ['Giba', 'Lucarelli', 'Bolsonaro', 'Viih Tube', 'Wellington Rato', 'Lula']
+        jogadores: ['Giba', 'Lucarelli', 'Bolsonaro', 'Viih Tube', 'Wellington Rato', 'Lula'],
+        descricao: 'Exemplo de descrição'
     }
     ];
 
@@ -156,6 +161,7 @@ export const MostrarEvento = () => {
                                 <GiSoccerBall style={{ marginLeft: '1rem' }} />
                             </ModalidadeEvento>
                             <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                            <DescricaoEvento>{evento.descricao}</DescricaoEvento>
                         </Evento>
                         <ModalContent key={key}>
                             <Modal
@@ -201,6 +207,7 @@ export const MostrarEvento = () => {
                                 <GiVolleyballBall style={{ marginLeft: '1rem' }} />
                             </ModalidadeEvento>
                             <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                            <DescricaoEvento>{evento.descricao}</DescricaoEvento>
                         </Evento>
                         <ModalContent>
                             <Modal
@@ -246,6 +253,7 @@ export const MostrarEvento = () => {
                                 <RiComputerLine style={{ marginLeft: '1rem' }} />
                             </ModalidadeEvento>
                             <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                            <DescricaoEvento>{evento.descricao}</DescricaoEvento>
                         </Evento>
                         <ModalContent>
                             <Modal
@@ -291,6 +299,7 @@ export const MostrarEvento = () => {
                                 <RiComputerLine style={{ marginLeft: '1rem' }} />
                             </ModalidadeEvento>
                             <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
+                            <DescricaoEvento>{evento.descricao}</DescricaoEvento>
                         </Evento>
                         <ModalContent>
                             <Modal

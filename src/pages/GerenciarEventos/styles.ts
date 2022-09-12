@@ -4,46 +4,30 @@ export const Container = styled.div`
 
 `;
 
-export const Content = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-`;
-
 export const Title = styled.div`
     text-align: center;
     margin-top: 3rem;
+    margin-bottom: 3rem;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #fff;
+    color: #ccc;
 `;
 
-export const CriarEquipeButton = styled.input`
-    cursor: pointer;
-    padding: 1rem 7rem;
-    background-color: #dbdbdb;
-    border-radius: 10px;
-    border: 2px solid #535362;
-    transition: 0.5s;
-    font-size: 1.1rem;
-    margin-top: 1rem;
-    &:hover {
-        filter: brightness(0.93);
-    }
-`;
-
-export const EquipesContent = styled.div`
+export const AllEvents = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     align-items: center;
+`;
+
+export const EventosContent = styled.div`
+
     gap: 5rem;
     margin: 4rem;
     text-align: center;
 `;
 
-export const Equipe = styled.div`
+export const Evento = styled.div`
     background: #FF7815;
     border: 2px solid #212127;
     border-radius: 10px;
@@ -52,8 +36,40 @@ export const Equipe = styled.div`
     cursor: pointer;
 `;
 
-export const NomeEquipe = styled.div`
+export const NomeEvento = styled.div`
     padding: 0.7rem;
+`;
+
+export const HorarioEvento = styled.div`
+    padding: 0.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+`;
+
+export const LocalEvento = styled.div`
+    padding: 0.5rem;
+`;
+
+export const VagasEvento = styled.div`
+    padding: 0.5rem;
+`;
+
+export const Role = styled.div`
+    padding: 0.5rem;
+    background-color: #ff6d02;
+    border-radius: 0px 0px 10px 10px;
+`;
+
+export const ModalidadeEvento = styled.div`
+    padding: 0.5rem;
+    transition: 0.5s;
+    background: #FF7815;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 
@@ -64,26 +80,25 @@ export const DisplayFlex = styled.div`
     border-bottom: 1px solid #ffa562;
 `;
 
-export const DescricaoEquipe = styled.div`
-    padding: 0.5rem;
+
+export const VoltarButton = styled.div`
+    cursor: pointer;
+    padding: 1rem 7rem;
+    background-color: #dbdbdb;
+    border-radius: 10px;
+    border: 2px solid #535362;
+    transition: 0.5s;
+    font-size: 1.1rem;
+    max-width: 80px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 3.5rem;
+    &:hover {
+        filter: brightness(0.93);
+    }
 `;
-
-export const MembrosEquipe = styled.div`
-    padding: 0.5rem;
-    background-color: #ff6d02;
-`;
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const ModalContent = styled.div`
     position: relative;
@@ -140,6 +155,7 @@ export const SairEvento = styled.button`
     border-radius: 5px;
     border: 1px solid #212127;
 `;
+
 
 export const Nome = styled.input`
     margin-top: 3rem;
@@ -218,11 +234,7 @@ export const ModalContentInputs = styled.div`
     min-width: 600px;
 `;
 
-export const ExcluirTime = styled.button`
+export const ExcluirEvento = styled.button`
     padding: 0.5rem 2.5rem;
     margin-top: 2rem;
-`;
-
-export const Role = styled.div`
-    padding: 0.5rem;
 `;

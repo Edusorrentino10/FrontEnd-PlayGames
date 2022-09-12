@@ -72,6 +72,16 @@ export const VagasEvento = styled.div`
     padding: 0.5rem;
 `;
 
+export const DescricaoEvento = styled.div`
+    padding: 0.5rem;
+    background-color: #ff6d02;
+`;
+
+export const MembrosEquipe = styled.div`
+    padding: 0.5rem;
+    background-color: #ff6d02;
+`;
+
 export const ModalidadeEvento = styled.div`
     padding: 0.5rem;
     transition: 0.5s;
@@ -158,7 +168,35 @@ export const CSFilter = styled.div<{ isActive: boolean }>`
     }
 `;
 
-export const ModalContent = styled.div`
+
+
+export const DivEquipes = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 0.3rem 2rem;
+    gap: 2rem;
+    fieldset {
+        padding: 0.8rem 5rem;
+        legend {
+            cursor: context-menu;
+            text-align: center;
+        }
+        
+        p {
+            text-align: center;
+            font-weight: 500;
+            color: #3e3e3e;
+            cursor: context-menu;
+            
+        }
+        button {
+            margin-top: 5rem;
+            padding: 1rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    }
+`; export const ModalContent = styled.div`
     position: relative;
 `;
 
@@ -202,32 +240,4 @@ export const ModalButton = styled.button`
         filter: brightness(0.93);
     }
     
-`;
-
-export const DivEquipes = styled.div`
-    display: flex;
-    justify-content: center;
-    padding: 0.3rem 2rem;
-    gap: 2rem;
-    fieldset {
-        padding: 0.8rem 5rem;
-        legend {
-            cursor: context-menu;
-            text-align: center;
-        }
-        
-        p {
-            text-align: center;
-            font-weight: 500;
-            color: #3e3e3e;
-            cursor: context-menu;
-            
-        }
-        button {
-            margin-top: 5rem;
-            padding: 1rem 1rem;
-            cursor: pointer;
-            font-weight: 500;
-        }
-    }
 `;

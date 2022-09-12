@@ -7,7 +7,7 @@ export const Container = styled.div`
     min-height: 80px;
     background: #FF7815;
     border-bottom: 2px solid #ffa562;
-    border-radius: 0px 0px 0.5rem 0.5rem;
+    border-radius: 0;
 `;
 
 export const Title = styled.div`
