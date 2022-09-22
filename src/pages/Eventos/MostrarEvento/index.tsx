@@ -4,11 +4,12 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../../assets/VSlogo.png';
 import Modal from 'react-modal';
+import { api } from '../../../services/api';
 
 
 
@@ -32,8 +33,18 @@ const customStylesModal = {
 
 export const MostrarEvento = () => {
 
-    const navigate = useNavigate();
+    const [events, setEvents] = useState([])
 
+    useEffect(() => {
+        const getEvents = async () => {
+            const response = await api.get('/events');
+            setEvents(response.data);
+        }
+        getEvents();
+    }, [])
+
+    console.log(events);
+    const navigate = useNavigate();
 
     const [openModalFifa, setModalFifa] = useState(false);
     const handleCloseModalFifa = () => {
@@ -69,7 +80,6 @@ export const MostrarEvento = () => {
     const handleOpenModalVolei = () => {
         setModalVolei(true);
     }
-
 
 
 
@@ -179,7 +189,7 @@ export const MostrarEvento = () => {
                                     <fieldset style={{ border: '3px solid #ffa562' }}>
                                         <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
                                         <div>
-                                            {evento.jogadores.map((jogador, key) => 
+                                            {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
                                             )}
                                         </div>
@@ -225,7 +235,7 @@ export const MostrarEvento = () => {
                                     <fieldset style={{ border: '3px solid #ffa562' }}>
                                         <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
                                         <div>
-                                            {evento.jogadores.map((jogador, key) => 
+                                            {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
                                             )}
                                         </div>
@@ -271,7 +281,7 @@ export const MostrarEvento = () => {
                                     <fieldset style={{ border: '3px solid #ffa562' }}>
                                         <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
                                         <div>
-                                            {evento.jogadores.map((jogador, key) => 
+                                            {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
                                             )}
                                         </div>
@@ -317,7 +327,7 @@ export const MostrarEvento = () => {
                                     <fieldset style={{ border: '3px solid #ffa562' }}>
                                         <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{evento.nomeEquipe}</legend>
                                         <div>
-                                            {evento.jogadores.map((jogador, key) => 
+                                            {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
                                             )}
                                         </div>
