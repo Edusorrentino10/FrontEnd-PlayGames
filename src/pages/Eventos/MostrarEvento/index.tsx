@@ -33,18 +33,6 @@ const customStylesModal = {
 
 export const MostrarEvento = () => {
 
-    // useEffect(() => {
-        
-    //     function 
-    //     const response = await api.get('/events');
-    //     console.log(response)
-    //     if (response.status === 201) {
-    //         navigate('/');
-    //     } else {
-    //         alert('Insira os dados corretamente');
-    //     }
-    // }, [])
-
 
     const [events, setEvents] = useState([])
 

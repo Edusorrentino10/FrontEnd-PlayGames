@@ -4,12 +4,13 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import { Header } from '../../../components/Header';
 import { Evento } from '../../GerenciarEventos/styles';
 import Modal from 'react-modal';
+import { api } from '../../../services/api';
 
 export const MostrarEquipe = () => {
 
@@ -32,6 +33,19 @@ export const MostrarEquipe = () => {
         }
     };
 
+
+
+    const [equipes, setEquipes] = useState([])
+
+    useEffect(() => {
+        const getEquipes = async () => {
+            const response = await api.get('/teams');
+            setEquipes(response.data);
+        }
+        getEquipes();
+    }, [])
+
+    console.log(equipes);
 
 
     const navigate = useNavigate();
@@ -98,8 +112,8 @@ export const MostrarEquipe = () => {
                             </DisplayFlex>
                             <Role>{equipe.role}</Role>
                             <MembrosEquipe>
-                                {equipe.equipe.map((equipe, key) =>
-                                    <div key={key}>
+                                {equipe.equipe.map((equipe, keya) =>
+                                    <div key={keya}>
                                         {equipe}
                                     </div>
                                 )}
@@ -139,23 +153,23 @@ export const MostrarEquipe = () => {
                         </ModalContent>
                     </div>
                 )}
-                {listaEquipes.map((equipe, key) => equipe.role === 'Convidado' &&
+                {listaEquipes.map((equipe, keye) => equipe.role === 'Convidado' &&
                     <div >
-                        <Equipe key={key} onClick={handleOpenModalConvidado}>
+                        <Equipe key={keye} onClick={handleOpenModalConvidado}>
                             <DisplayFlex>
                                 <NomeEquipe>{equipe.nome}</NomeEquipe>
                             </DisplayFlex>
                             <Role>{equipe.role}</Role>
                             <MembrosEquipe>
-                                {equipe.equipe.map((equipe, key) =>
-                                    <div key={key}>
+                                {equipe.equipe.map((equipe, keyb) =>
+                                    <div key={keyb}>
                                         {equipe}
                                     </div>
                                 )}
                             </MembrosEquipe>
                             <DescricaoEquipe>  Descrição: {equipe.descricao}</DescricaoEquipe>
                         </Equipe>
-                        <ModalContent key={key} >
+                        <ModalContent  >
                             <Modal
                                 isOpen={openModalConvidado}
                                 onRequestClose={handleCloseModalConvidado}
