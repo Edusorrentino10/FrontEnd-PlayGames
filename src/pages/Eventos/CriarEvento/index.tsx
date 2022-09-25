@@ -32,7 +32,7 @@ export const CriarEvento = () => {
             name: nome,
             description: descricao,
             teamsLimit: parseInt(vagas),
-            date: data,
+            date: new Date(data),
             //createdAt: data,
             //pdatedAt: data
         });
