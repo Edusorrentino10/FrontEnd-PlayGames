@@ -1,5 +1,6 @@
 import { FormEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import { Header } from '../../../components/Header';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { Cadastrar, Container, Email, EsqueceuSenha, LoginButton, LoginContainer, Senha, SubTitle, Title } from './styles';
@@ -15,8 +16,10 @@ export const Login = () => {
         e.preventDefault();
         try {     
             const response = await signIn({email, password});
-            if (response) {
+            if (response === true) {
                 navigate('/eventos')
+            } else {
+                toast.error(`Dados incorretos.`)
             }
         } catch (err) {
             console.log('🚀 ~ file: index.tsx ~ handleSignIn ~ err', err)
@@ -35,6 +38,7 @@ export const Login = () => {
                 <Cadastrar onClick={() => navigate('/cadastro')}>Cadastre-se</Cadastrar>
                 <LoginButton value="Entrar" type="submit" disabled={isSigningIn}/>
             </LoginContainer>
+            <ToastContainer autoClose={3500} />
         </Container>
     );
 }
