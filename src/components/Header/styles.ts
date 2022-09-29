@@ -63,3 +63,18 @@ export const Eventos = styled.div`
     border-radius: 10px;
    }
 `;
+
+export const Logout = styled.div`
+    font-size: 1rem;
+    color: #fff;
+    padding: 10px;
+    font-weight: bold;
+    position: absolute;
+    right: 3.5rem;
+    display: flex;
+    gap: 0.3rem;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.95;
+    }
+`

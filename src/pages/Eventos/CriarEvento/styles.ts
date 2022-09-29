@@ -17,6 +17,13 @@ export const CadastroContainer = styled.form`
     margin-top: 4rem;
     border-radius: 15px;
     background: #e0e0e0;
+    select {
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 15px;
+    border: 0;
+    width: 55%;
+    }
 `;
 
 export const Title = styled.div`
@@ -45,8 +52,8 @@ export const Data = styled.input`
     padding: 10px;
     border-radius: 15px;
     border: 0;
-    flex: 1.8;
-    margin-right: 0.3rem;
+    width: 50%;
+
 `;
 
 export const Hora = styled.input`
@@ -73,7 +80,7 @@ export const Local = styled.input`
     width: 50%;
 `;
 
-export const Modalidade = styled.input`
+export const Modalidade = styled.select`
     margin-top: 1rem;
     padding: 10px;
     border-radius: 15px;

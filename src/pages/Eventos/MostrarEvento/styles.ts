@@ -9,6 +9,13 @@ export const Content = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    select {
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 2px;
+    border: 0;
+    width: 7rem;
+    }
 `;
 
 export const Title = styled.div`
@@ -241,3 +248,4 @@ export const ModalButton = styled.button`
     }
     
 `;
+

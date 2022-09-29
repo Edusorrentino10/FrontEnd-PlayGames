@@ -9,6 +9,7 @@ import { Perfil } from './pages/Perfil';
 import { CriarEquipe } from './pages/Equipes/CriarEquipe';
 import { Configuracoes } from './pages/Configuracoes';
 import { GerenciarEventos } from './pages/GerenciarEventos';
+import { RequireAuth } from './contexts/RequireAuth';
 
 
 export const Router = () => {
@@ -20,13 +21,13 @@ export const Router = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/esqueceu-senha" element={<EsqueceuSenha />} />
-                <Route path="/criar-evento" element={<CriarEvento />} />
-                <Route path="/eventos" element={<MostrarEvento />} />
-                <Route path="/equipes" element={<MostrarEquipe />} />
-                <Route path="/criar-equipe" element={<CriarEquipe />} />          
-                <Route path="/configuracoes" element={<Configuracoes />} />   
-                <Route path="/perfil" element={<Perfil />} />
-                <Route path="/gerenciar-eventos" element={<GerenciarEventos />} />
+                <Route path="/criar-evento" element={<RequireAuth><CriarEvento /></RequireAuth>} />
+                <Route path="/eventos" element={<RequireAuth><MostrarEvento /></RequireAuth>} />
+                <Route path="/equipes" element={<RequireAuth><MostrarEquipe /></RequireAuth>} />
+                <Route path="/criar-equipe" element={<RequireAuth><CriarEquipe /></RequireAuth>} />          
+                <Route path="/configuracoes" element={<RequireAuth><Configuracoes /></RequireAuth>} />   
+                <Route path="/perfil" element={<RequireAuth><Perfil /></RequireAuth>} />
+                <Route path="/gerenciar-eventos" element={<RequireAuth><GerenciarEventos /></RequireAuth>} />
             </Routes>
         </BrowserRouter>
     )

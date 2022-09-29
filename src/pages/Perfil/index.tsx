@@ -1,6 +1,10 @@
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
+import { AuthContext } from '../../contexts/AuthContext';
+import { api } from '../../services/api';
 import { AlterarFoto, AlterarInformacoes, AlterarSenha, Column, Container, Content, Email, ExcluirPerfil, Foto, GerenciarEventos, Nome, Title, SegundoContent } from './styles';
+import { BsFillPersonFill } from 'react-icons/bs';
 
 
 
@@ -8,26 +12,39 @@ import { AlterarFoto, AlterarInformacoes, AlterarSenha, Column, Container, Conte
 export const Perfil = () => {
 
     const navigate = useNavigate();
-    
+
+    const [perfilUsuario, setPerfilUsuario] = useState([])
+    const auth = useContext(AuthContext);
+
+    useEffect(() => {
+        const getPerfil = async () => {
+            const response = await api.get(`/users/me/${auth.user.id}`);
+            setPerfilUsuario(response.data);
+        }
+        getPerfil();
+    }, [])
+    console.log(auth.user)
+    console.log(perfilUsuario);
+
     return (
-    <Container>
-        <Header />
-        <Title>Perfil</Title>
-        <Content>
-            <Column>
-                <Foto src="https://blogdojuca.uol.com.br/files/2022/04/img_1197.jpg" type="image"></Foto>
-                <AlterarFoto type="file" accept="image/png, image/jpg, image/gif, image/jpeg" />
-            </Column>
-            <Column>
-                <Nome><strong>Nome:</strong> Germán Ezequiel Cano Recalde</Nome>
-                <Email><strong>Email:</strong> canoL14@gmail.com</Email>
-            </Column>
-        </Content>
-        <SegundoContent>
-            <AlterarInformacoes onClick={() => navigate('/configuracoes')}>Alterar Informações</AlterarInformacoes>
-            {/* <AlterarSenha>Alterar Senha</AlterarSenha>
+        <Container>
+            <Header />
+            <Title>Perfil</Title>
+            <Content>
+                <Column>
+                    <BsFillPersonFill size={60} />
+                </Column>
+                <Column>
+                    <Nome><strong>Nome:</strong>{auth.user.name}</Nome>
+                    <Email><strong>Email:</strong>{auth.user.email}</Email>
+                </Column>
+            </Content>
+            <SegundoContent>
+                <AlterarInformacoes onClick={() => navigate('/configuracoes')}>Alterar Informações</AlterarInformacoes>
+                {/* <AlterarSenha>Alterar Senha</AlterarSenha>
             <ExcluirPerfil>Excluir Perfil</ExcluirPerfil> */}
-            <GerenciarEventos onClick={() => navigate('/gerenciar-eventos')}>Gerenciar Eventos</GerenciarEventos>
-        </SegundoContent>
-    </Container>
-)}
+                <GerenciarEventos onClick={() => navigate('/gerenciar-eventos')}>Gerenciar Eventos</GerenciarEventos>
+            </SegundoContent>
+        </Container>
+    )
+}

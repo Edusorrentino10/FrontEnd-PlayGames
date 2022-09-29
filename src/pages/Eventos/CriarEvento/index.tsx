@@ -3,6 +3,17 @@ import { CadastroContainer, Local, Container, Data, Nome, SignupButton, Title, V
 import { useNavigate } from 'react-router-dom';
 import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../../../services/api';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
+
+
+type SportsProps = {
+    id: string,
+    name: string,
+}
+
+
 
 export const CriarEvento = () => {
 
@@ -14,31 +25,43 @@ export const CriarEvento = () => {
     const [vagas, setVagas] = useState('')
     const [local, setLocal] = useState('')
     const [descricao, setDescricao] = useState('')
+    const [sportSelected, setSportSelected] = useState('')
+    const [sports, setSports] = useState<SportsProps[]>([]);
+
+    useEffect(() => {
+        const getSports = async () => {
+            const response = await api.get('/sports');
+            setSports(response.data);
+        }
+        getSports();
+
+    }, [])
+
+
+    
 
 
     const navigate = useNavigate();
 
+
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        if(parseInt(vagas) === 0){
+            toast.error('Número de vagas inválido');
+            return false;
+        }
         const response = await api.post('/events', {
-            // nome,
-            // data,
-            // hora,
-            // vagas,
-            // local,
-            // descricao
-
-            //id: "asdsae2o13290",
             name: nome,
             description: descricao,
             teamsLimit: parseInt(vagas),
-            date: new Date(data),
-            //createdAt: data,
-            //pdatedAt: data
+            location: local,
+            day: data,
+            time: hora,
+            sportId: sportSelected
         });
         setEvents(response.data);
-        console.log(events);
-        //navigate('/eventos')
+        navigate('/eventos')
     }
 
     return (
@@ -51,12 +74,17 @@ export const CriarEvento = () => {
                     <Data type="date" value={data} onChange={(e) => setData(e.target.value)} required />
                     <Hora type="time" value={hora} onChange={(e) => setHora(e.target.value)} required />
                 </DisplayFlex>
+                <select onChange={(e) => setSportSelected(e.target.value)} name="select" required>
+                    {sports.map((item) =>
+                        <option value={item.id}>{item.name}</option>
+                    )}
+                </select>
                 <Vagas placeholder="Vagas" type="number" value={vagas} onChange={(e) => setVagas(e.target.value)} required />
                 <Local placeholder="Local" type="text" value={local} onChange={(e) => setLocal(e.target.value)} required />
                 <Descricao placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} required />
-                {/*<Modalidade placeholder="Modalidade" type="text" required /> */}
                 <SignupButton value="Criar" type="submit"></SignupButton>
             </CadastroContainer>
+            <ToastContainer />
         </Container>
     )
 }

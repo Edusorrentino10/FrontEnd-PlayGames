@@ -14,13 +14,15 @@ export const Login = () => {
 
     const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {     
-            const response = await signIn({email, password});
-            if (response === true) {
-                navigate('/eventos')
-            } else {
-                toast.error(`Dados incorretos.`)
+        try {
+            if (email !== '' && password !== '') {
+                const response = await signIn({ email, password });
+                if (response === true) {
+                    navigate('/eventos')
+                    return true;
+                }
             }
+            toast.error(`Dados incorretos.`)
         } catch (err) {
             console.log('🚀 ~ file: index.tsx ~ handleSignIn ~ err', err)
         }
@@ -29,14 +31,14 @@ export const Login = () => {
     return (
         <Container>
             <Header />
-            <LoginContainer onSubmit={(e)=> handleSignIn(e)}>
+            <LoginContainer onSubmit={(e) => handleSignIn(e)}>
                 <Title>Login</Title>
                 <SubTitle>Faça login para continuar.</SubTitle>
-                <Email placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)}/>
-                <Senha placeholder="Senha" type="password"  onChange={(e) => setPassword(e.target.value)}/>
+                <Email placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
+                <Senha placeholder="Senha" type="password" onChange={(e) => setPassword(e.target.value)} />
                 <EsqueceuSenha onClick={() => navigate('/esqueceu-senha')}>Esqueceu a senha?</EsqueceuSenha>
                 <Cadastrar onClick={() => navigate('/cadastro')}>Cadastre-se</Cadastrar>
-                <LoginButton value="Entrar" type="submit" disabled={isSigningIn}/>
+                <LoginButton value="Entrar" type="submit" disabled={isSigningIn} />
             </LoginContainer>
             <ToastContainer autoClose={3500} />
         </Container>
