@@ -62,6 +62,7 @@ type ModalProps = {
 export const MostrarEvento = () => {
 
 
+    const [event, setEvent] = useState({});
     const [events, setEvents] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
 
@@ -84,45 +85,7 @@ export const MostrarEvento = () => {
     console.log(sports);
     const navigate = useNavigate();
 
-    const [openModalBasquete, setModalBasquete] = useState(false);
-    const handleCloseModalBasquete = () => {
-        setModalBasquete(false);
-    }
-    const handleOpenModalBasquete = () => {
-        setModalBasquete(true);
-    }
-
-
-    const [openModalFutebol, setModalFutebol] = useState(false);
-    const handleCloseModalFutebol = () => {
-        setModalFutebol(false);
-    }
-    const handleOpenModalFutebol = () => {
-
-        setModalFutebol(true);
-    }
-
-
-    const [openModalEsports, setModalEsports] = useState(false);
-    const handleCloseModalEsports = () => {
-        setModalEsports(false);
-    }
-    const handleOpenModalEsports = () => {
-        setModalEsports(true);
-    }
-
-
-    const [openModalVolei, setModalVolei] = useState(false);
-    const handleCloseModalVolei = () => {
-        setModalVolei(false);
-    }
-    const handleOpenModalVolei = () => {
-        setModalVolei(true);
-    }
-
-
-
-
+    const [openModal, setOpenModal] = useState(false);
 
     const [openFilter, setOpenFilter] = useState(false);
     const [futebolSelected, setFutebolSelected] = useState(true);
@@ -183,22 +146,21 @@ export const MostrarEvento = () => {
         }
     };
 
-
-    const ModalEvents = ({ name, day, time, openModalState, closeModal }: ModalProps) => (
+    const ModalEvents = () => (
         <Modal
             isOpen={openModalState}
             onRequestClose={closeModal}
             style={customStylesModal}
             contentLabel="Example Modal"
         >
-            <TitleModal>{name}</TitleModal>
-            <HorarioModal>{day} - {time}</HorarioModal>
+            <TitleModal>{event?.name}</TitleModal>
+            <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <ImgModal src={vslogo} alt="" />
             </div>
             <DivEquipes>
                 <fieldset style={{ border: '3px solid #ffa562' }}>
-                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{name}</legend>
+                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{event?.name}</legend>
                     {/* <div>
                                             {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
@@ -228,9 +190,13 @@ export const MostrarEvento = () => {
                 </select>
             </Content>
             <EventosContent>
-                {events.map((evento, key) => evento.Sport.name === 'Futebol' && futebolSelected &&
+                {events.map((evento, key) =>
                     <div key={key}>
-                        <Evento onClick={handleOpenModalFutebol}>
+                        <Evento onClick={() => {
+                            setOpenModal(true)
+                            setEvent(evento)
+                        }
+                        }>
                             <DisplayFlex>
                                 <NomeEvento>{evento.name}</NomeEvento>
                                 <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
@@ -242,69 +208,12 @@ export const MostrarEvento = () => {
                             <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                             <DescricaoEvento>{evento.description}</DescricaoEvento>
                         </Evento>
-                        <ModalContent>
-                            <ModalEvents name={evento.name} day={evento.day} time={evento.time} openModalState={openModalFutebol} closeModal={handleCloseModalFutebol} />
-                        </ModalContent>
-                    </div>
-                )}
-                {events.map((evento, key) => evento.Sport.name === 'Vôlei' && voleiSelected &&
-                    <div key={key}>
-                        <Evento onClick={handleOpenModalVolei}>
-                            <DisplayFlex>
-                                <NomeEvento>{evento.name}</NomeEvento>
-                                <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
-                            </DisplayFlex>
-                            <LocalEvento>{evento.location}</LocalEvento>
-                            <ModalidadeEvento>{evento.Sport.name}
-                                <GiVolleyballBall style={{ marginLeft: '1rem' }} />
-                            </ModalidadeEvento>
-                            <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                            <DescricaoEvento>{evento.description}</DescricaoEvento>
-                        </Evento>
-                        <ModalContent>
-                            <ModalEvents name={evento.name} day={evento.day} time={evento.time} openModalState={openModalVolei} closeModal={handleCloseModalVolei} />
-                        </ModalContent>
-                    </div>
-                )}
-                {events.map((evento, key) => evento.Sport.name === 'Basquete' && basqueteSelected &&
-                    <div key={key}>
-                        <Evento onClick={handleOpenModalBasquete}>
-                            <DisplayFlex>
-                                <NomeEvento>{evento.name}</NomeEvento>
-                                <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
-                            </DisplayFlex>
-                            <LocalEvento>{evento.location}</LocalEvento>
-                            <ModalidadeEvento>{evento.Sport.name}
-                                <RiComputerLine style={{ marginLeft: '1rem' }} />
-                            </ModalidadeEvento>
-                            <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                            <DescricaoEvento>{evento.description}</DescricaoEvento>
-                        </Evento>
-                        <ModalContent>
-                            <ModalEvents name={evento.name} day={evento.day} time={evento.time} openModalState={openModalBasquete} closeModal={handleCloseModalBasquete} />
-                        </ModalContent>
-                    </div>
-                )}
-                {events.map((evento, key) => evento.Sport.name === 'eSports' && esportsSelected &&
-                    <div key={key}>
-                        <Evento onClick={handleOpenModalEsports}>
-                            <DisplayFlex>
-                                <NomeEvento>{evento.name}</NomeEvento>
-                                <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
-                            </DisplayFlex>
-                            <LocalEvento>{evento.location}</LocalEvento>
-                            <ModalidadeEvento>{evento.Sport.name}
-                                <RiComputerLine style={{ marginLeft: '1rem' }} />
-                            </ModalidadeEvento>
-                            <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                            <DescricaoEvento>{evento.description}</DescricaoEvento>
-                        </Evento>
-                        <ModalContent>
-                            <ModalEvents name={evento.name} day={evento.day} time={evento.time} openModalState={openModalEsports} closeModal={handleCloseModalEsports} />
-                        </ModalContent>
                     </div>
                 )}
             </EventosContent>
+            <ModalContent>
+                <ModalEvents />
+            </ModalContent>
         </Container>
     )
 }
