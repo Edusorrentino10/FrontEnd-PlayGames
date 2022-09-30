@@ -25,7 +25,7 @@ export const CriarEvento = () => {
     const [vagas, setVagas] = useState('')
     const [local, setLocal] = useState('')
     const [descricao, setDescricao] = useState('')
-    const [sportSelected, setSportSelected] = useState('')
+    const [sportSelected, setSportSelected] = useState('ca2ab2b2-056a-42d7-87dc-bfb81310ea78')
     const [sports, setSports] = useState<SportsProps[]>([]);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ export const CriarEvento = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if(parseInt(vagas) === 0){
+        if(parseInt(vagas) < 1){
             toast.error('Número de vagas inválido');
             return false;
         }
