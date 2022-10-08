@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'https://play-games-api.herokuapp.com',
+  baseURL: 'https://api-play-games.herokuapp.com',
 });

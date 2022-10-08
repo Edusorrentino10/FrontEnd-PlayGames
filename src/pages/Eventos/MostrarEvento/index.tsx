@@ -59,6 +59,7 @@ export const MostrarEvento = () => {
     const [filter, setFilter] = useState('')
 
     useEffect(() => {
+
         const getEvents = async () => {
             const response = await api.get('/events');
             setEvents(response.data);
@@ -81,6 +82,7 @@ export const MostrarEvento = () => {
         >
             <TitleModal>{event?.name}</TitleModal>
             <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
+            <HorarioModal>Vagas: {event?.teamsLimit}</HorarioModal>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <ImgModal src={vslogo} alt="" />
             </div>
@@ -127,11 +129,11 @@ export const MostrarEvento = () => {
                             }
                             }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento.name}</NomeEvento>
+                                    <NomeEvento>{evento?.name}</NomeEvento>
                                     <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
-                                <ModalidadeEvento>{evento.Sport.name}
+                                <ModalidadeEvento>{evento.Sport?.name}
                                     <GiSoccerBall style={{ marginLeft: '1rem' }} />
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
@@ -139,7 +141,7 @@ export const MostrarEvento = () => {
                             </Evento>
                         </div>
                     ) :
-                    events.map((evento, key) => evento.Sport.name === filter &&
+                    events.map((evento, key) => evento.Sport?.name === filter &&
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
@@ -147,11 +149,11 @@ export const MostrarEvento = () => {
                             }
                             }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento.name}</NomeEvento>
+                                    <NomeEvento>{evento?.name}</NomeEvento>
                                     <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
-                                <ModalidadeEvento>{evento.Sport.name}
+                                <ModalidadeEvento>{evento.Sport?.name}
                                     <GiSoccerBall style={{ marginLeft: '1rem' }} />
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>

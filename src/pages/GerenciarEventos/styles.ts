@@ -4,24 +4,47 @@ export const Container = styled.div`
 
 `;
 
+export const Content = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    select {
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 2px;
+    border: 0;
+    width: 7rem;
+    }
+`;
+
 export const Title = styled.div`
     text-align: center;
     margin-top: 3rem;
-    margin-bottom: 3rem;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #ccc;
+    color: #fff;
 `;
 
-export const AllEvents = styled.div`
+export const CriarEventoButton = styled.input`
+    cursor: pointer;
+    padding: 1rem 7rem;
+    background-color: #dbdbdb;
+    border-radius: 10px;
+    border: 2px solid #535362;
+    transition: 0.5s;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    &:hover {
+        filter: brightness(0.93);
+    }
+`;
+
+export const EventosContent = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     align-items: center;
-`;
-
-export const EventosContent = styled.div`
-
     gap: 5rem;
     margin: 4rem;
     text-align: center;
@@ -56,10 +79,14 @@ export const VagasEvento = styled.div`
     padding: 0.5rem;
 `;
 
-export const Role = styled.div`
+export const DescricaoEvento = styled.div`
     padding: 0.5rem;
     background-color: #ff6d02;
-    border-radius: 0px 0px 10px 10px;
+`;
+
+export const MembrosEquipe = styled.div`
+    padding: 0.5rem;
+    background-color: #ff6d02;
 `;
 
 export const ModalidadeEvento = styled.div`
@@ -80,27 +107,103 @@ export const DisplayFlex = styled.div`
     border-bottom: 1px solid #ffa562;
 `;
 
-
-export const VoltarButton = styled.div`
-    cursor: pointer;
-    padding: 1rem 7rem;
-    background-color: #dbdbdb;
-    border-radius: 10px;
-    border: 2px solid #535362;
-    transition: 0.5s;
-    font-size: 1.1rem;
-    max-width: 80px;
-    text-align: center;
+export const FilterEvents = styled.div<{ isActive: boolean }>`
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin: auto;
-    margin-bottom: 3.5rem;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    border: 1px solid #626273;
+    border-radius: ${props => props.isActive ? '0.2rem 0.2rem 0 0' : '0.2rem'};
+    padding: 0.5rem 4.7rem 0.5rem 4.5rem;
+    max-width: 14rem;
+    cursor: pointer;
+    background-color: ${props => props.isActive ? '#FF7815' : '#ffa562'};
+    transition: 0.5s;
     &:hover {
-        filter: brightness(0.93);
+        filter: brightness(0.96);
+    }
+    @media (max-width: 620px) {
+        justify-content: space-between;
     }
 `;
 
-export const ModalContent = styled.div`
+export const FilterOptions = styled.div<{ isActive: boolean }>`
+    border: 1px solid #626273;
+    border-top: 0;
+    cursor: pointer;
+    display: ${props => props.isActive ? 'grid' : 'none'};
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: white;
+    max-width: 14rem;
+    @media (max-width: 620px) {
+    }
+`;
+
+export const FutebolFilter = styled.div<{ isActive: boolean }>`
+    padding: 0.5rem 3.5rem 0.5rem 3.5rem;
+    transition: 0.5s;
+    background: ${props => props.isActive ? '#9e9e9e' : ''};
+    &:hover {
+        background-color: ${props => props.isActive ? '' : '#ebebed'};
+    }
+`;
+export const VoleiFilter = styled.div<{ isActive: boolean }>`
+    padding: 0.5rem 3.5rem 0.5rem 3.5rem;
+    transition: 0.5s;
+    background: ${props => props.isActive ? '#9e9e9e' : ''};
+    &:hover {
+        background-color: ${props => props.isActive ? '' : '#ebebed'};
+    }
+`;
+export const FifaFilter = styled.div<{ isActive: boolean }>`
+    padding: 0.5rem 3.5rem 0.5rem 3.5rem;
+    transition: 0.5s;
+    background: ${props => props.isActive ? '#9e9e9e' : ''};
+    &:hover {
+        background-color: ${props => props.isActive ? '' : '#ebebed'};
+    }
+`;
+export const CSFilter = styled.div<{ isActive: boolean }>`
+    padding: 0.5rem 3.5rem 0.5rem 3.5rem;
+    transition: 0.5s;
+    background: ${props => props.isActive ? '#9e9e9e' : ''};
+    &:hover {
+        background-color: ${props => props.isActive ? '' : '#ebebed'};
+    }
+`;
+
+
+
+export const DivEquipes = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 0.3rem 2rem;
+    gap: 2rem;
+    fieldset {
+        padding: 0.8rem 5rem;
+        legend {
+            cursor: context-menu;
+            text-align: center;
+        }
+        
+        p {
+            text-align: center;
+            font-weight: 500;
+            color: #3e3e3e;
+            cursor: context-menu;
+            
+        }
+        button {
+            margin-top: 5rem;
+            padding: 1rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    }
+`; export const ModalContent = styled.div`
     position: relative;
 `;
 
@@ -137,7 +240,6 @@ export const ModalButton = styled.button`
     color: #fff;
     font-size: 1.1rem;
     margin: 2.5rem;
-    margin-top: 0;
     float: right;
     transition: 0.5s;
     cursor: pointer;
@@ -147,13 +249,28 @@ export const ModalButton = styled.button`
     
 `;
 
-export const SairEvento = styled.button`
-    padding: 1rem 3rem;
-    margin-top: 5rem;
-    margin-bottom: 3rem;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #212127;
+export const DisplayFlexInputs = styled.div`
+    
+    button {
+        padding: 0.4rem;
+        cursor: pointer;
+        border-radius: 7px;
+        border: 1px solid #212127;
+    }
+        textarea {
+        display: flex;
+        margin-bottom: 1rem;
+    }
+`;
+
+export const ModalContentInputs = styled.div`
+    padding: 1rem 2.5rem;
+    min-width: 600px;
+`;
+
+export const ExcluirEvento = styled.button`
+    padding: 0.5rem 2.5rem;
+    margin-top: 2rem;
 `;
 
 
@@ -180,7 +297,6 @@ export const Hora = styled.input`
     padding: 10px;
     border-radius: 15px;
     border: 0;
-
 `;
 
 export const Vagas = styled.input`
@@ -212,29 +328,4 @@ export const Descricao = styled.textarea`
     border-radius: 15px;
     border: 0;
     width: 50%;
-`;
-
-export const DisplayFlexInputs = styled.div`
-    
-
-    button {
-        padding: 0.4rem;
-        cursor: pointer;
-        border-radius: 7px;
-        border: 1px solid #212127;
-    }
-        textarea {
-        display: flex;
-        margin-bottom: 1rem;
-    }
-`;
-
-export const ModalContentInputs = styled.div`
-    padding: 1rem 2.5rem;
-    min-width: 600px;
-`;
-
-export const ExcluirEvento = styled.button`
-    padding: 0.5rem 2.5rem;
-    margin-top: 2rem;
 `;

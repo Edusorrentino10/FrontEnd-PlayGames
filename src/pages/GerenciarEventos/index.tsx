@@ -1,12 +1,16 @@
 import { Header } from '../../components/Header';
-import { AllEvents, Container, Data, Descricao, DisplayFlex, DisplayFlexInputs, Evento, EventosContent, ExcluirEvento, Hora, HorarioEvento, HorarioModal, Local, LocalEvento, ModalButton, ModalContent, ModalContentInputs, ModalidadeEvento, Nome, NomeEvento, Role, SairEvento, Title, TitleModal, Vagas, VagasEvento, VoltarButton } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao } from './styles';
+import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
-import { useState } from 'react';
-import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-
-
+import { useContext, useEffect, useState } from 'react';
+import { MdArrowDropDown } from 'react-icons/md';
+import { GiVolleyballBall } from 'react-icons/gi';
+import vslogo from '../../assets/VSlogo.png';
+import Modal from 'react-modal';
+import { api } from '../../services/api';
+import { AuthContext } from '../../contexts/AuthContext';
 
 const customStylesModal = {
     content: {
@@ -26,374 +30,159 @@ const customStylesModal = {
 };
 
 
+type SportsProps = {
+    id: string,
+    name: string,
+}
+
+type EventsProps = {
+    id: string,
+    name: string,
+    description: string,
+    day: string,
+    teamsLimit: string,
+    location: string,
+    sportId: string,
+    time: string,
+    createdBy: string,
+    Sport: {
+        id: string,
+        name: string,
+    }
+}
 
 export const GerenciarEventos = () => {
-
     const navigate = useNavigate();
 
+    const [event, setEvent] = useState<EventsProps>();
+    const [events, setEvents] = useState<EventsProps[]>([]);
+    const [sports, setSports] = useState<SportsProps[]>([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [filter, setFilter] = useState('')
 
-    const [openModalFifa, setModalFifa] = useState(false);
-    const handleCloseModalFifa = () => {
-        setModalFifa(false);
-    }
-    const handleOpenModalFifa = () => {
-        setModalFifa(true);
-    }
-
-
-    const [openModalFutebol, setModalFutebol] = useState(false);
-    const handleCloseModalFutebol = () => {
-        setModalFutebol(false);
-    }
-    const handleOpenModalFutebol = () => {
-        setModalFutebol(true);
-    }
+    const auth = useContext(AuthContext);
 
 
-    const [openModalCS, setModalCS] = useState(false);
-    const handleCloseModalCS = () => {
-        setModalCS(false);
-    }
-    const handleOpenModalCS = () => {
-        setModalCS(true);
-    }
+    useEffect(() => {
+        console.log(auth.user.id)
+        const getEvents = async () => {
+            const response = await api.get('/events');
+                setEvents(response.data);
+        }
+        getEvents();
+
+        const getSports = async () => {
+            const response = await api.get('/sports');
+            setSports(response.data);
+        }
+        getSports();
+
+    }, [])
+
+    const ModalEvents = () => (
+        <Modal
+            isOpen={openModal}
+            style={customStylesModal}
+            contentLabel="Example Modal"
+        >
+            <div>
+                                            <TitleModal>{event?.name}</TitleModal>
+                                            <HorarioModal>{event?.time}</HorarioModal>
+                                            <ModalContentInputs>
+                                                <DisplayFlexInputs>
+                                                    <Nome placeholder={event?.name} type="text" />
+                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
+                                                </DisplayFlexInputs>
+                                                <DisplayFlexInputs>
+                                                    <Data type="date" />
+                                                    <Hora type="time" />
+                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
+                                                </DisplayFlexInputs>
+                                                <DisplayFlexInputs>
+                                                    <Local type="text" placeholder={event?.location} />
+                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
+                                                </DisplayFlexInputs>
+                                                <DisplayFlexInputs>
+                                                    <Vagas placeholder='Valor' type="number" />
+                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
+                                                </DisplayFlexInputs>
+                                                <DisplayFlexInputs>
+                                                    <Descricao placeholder={event?.description} />
+                                                    <button>Alterar Descrição</button>
+                                                </DisplayFlexInputs>
+                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
+                                                </div>
+                                                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                                            </ModalContentInputs>
+                                        </div>
+                                        
+        </Modal>
+    )
 
 
-    const [openModalVolei, setModalVolei] = useState(false);
-    const handleCloseModalVolei = () => {
-        setModalVolei(false);
-    }
-    const handleOpenModalVolei = () => {
-        setModalVolei(true);
-    }
 
 
 
-    const listaEventos = [{
-        nome: 'PROZAO',
-        horario: '18:00',
-        data: '18/09',
-        local: 'PC',
-        modalidade: 'FIFA',
-        vagas: 11,
-        nomeEquipe: 'Viciados em Vencer',
-        jogadores: ['Taffarell', 'Dani Alves', 'Thiago Silva', 'Gum', 'Marcelo', 'Deco', 'Zidane', 'Voice', 'Vini JR', 'Neymar', 'Raphinha'],
-        role: 'Convidado',
-        descricao: 'Exemplo de descrição'
-    },
-    {
-        nome: 'FutePorco',
-        horario: '21:00',
-        data: '18/09',
-        local: 'Arena Porco',
-        modalidade: 'Futebol',
-        vagas: 11,
-        nomeEquipe: 'Viciados em Derrota',
-        jogadores: ['Neuer', 'Bruno', 'Marcelo Bechler', 'Isa Pagliari', 'Alê', 'Ricardinho', 'Caio Castro', 'Luizinho', 'Beltrão', 'Certezas', 'Cazé'],
-        role: 'Convidado',
-        descricao: 'Exemplo de descrição'
-
-    },
-    {
-        nome: 'CS 5X5',
-        horario: '22:00',
-        data: '18/09',
-        local: 'PC',
-        modalidade: 'Counter-Strike',
-        vagas: 5,
-        nomeEquipe: 'Só morremo',
-        jogadores: ['Fallen', 'Gotze', 'Verstappen', 'Heráclito', 'Lebron James'],
-        role: 'Administrador',
-        descricao: 'Exemplo de descrição'
-
-    },
-    {
-        nome: 'Voleizin',
-        horario: '16:00',
-        data: '03/09',
-        local: 'Miami',
-        modalidade: 'Volei',
-        vagas: 6,
-        nomeEquipe: 'Viciados em Derrotas',
-        jogadores: ['Giba', 'Lucarelli', 'Bolsonaro', 'Viih Tube', 'Wellington Rato', 'Lula'],
-        role: 'Administrador',
-        descricao: 'Exemplo de descrição'
-    }
-    ];
 
 
+
+
+    
     return (
         <Container>
             <Header />
-            <Title>Gerenciar Eventos</Title>
-            <AllEvents>
-                <EventosContent>
-                    {listaEventos.map((evento, key) => evento.modalidade === 'FIFA' &&
-                        <div>
-                            <Evento key={key} onClick={handleOpenModalFifa} >
-                                <DisplayFlex>
-                                    <NomeEvento>{evento.nome}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                                </DisplayFlex>
-                                <LocalEvento>{evento.local}</LocalEvento>
-                                <ModalidadeEvento>{evento.modalidade}
-                                    <RiComputerLine style={{ marginLeft: '1rem' }} />
-                                </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                                <Role>{evento.role}</Role>
-                            </Evento>
 
-                            <ModalContent key={key}>
-                                <Modal
-                                    isOpen={openModalFifa}
-                                    onRequestClose={handleCloseModalFifa}
-                                    style={customStylesModal}
-                                    contentLabel="Example Modal"
-                                >
-                                    {evento.role === 'Administrador' ?
-                                        <div>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={evento.nome} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={evento.local} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={evento.descricao} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                            </ModalContentInputs>
-                                        </div>
-                                        :
-                                        <div style={{ textAlign: 'center' }}>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <SairEvento>Sair do Evento</SairEvento>
-                                        </div>
-                                    }
-                                    <ModalButton onClick={handleCloseModalFifa}>Fechar</ModalButton>
-                                </Modal>
-                            </ModalContent>
-                        </div>
-                    )}
-                </EventosContent>
-                <EventosContent>
-                    {listaEventos.map((evento, key) => evento.modalidade === 'Futebol' &&
-                        <div>
-                            <Evento key={key} onClick={handleOpenModalFutebol} >
+            <EventosContent>
+                {filter === '' ?
+                    events.map((evento, key) => auth.user.id === evento.createdBy &&
+                        <div key={key}>
+                            <Evento onClick={() => {
+                                setOpenModal(true)
+                                setEvent(evento)
+                            }
+                            }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento.nome}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                                    <NomeEvento>{evento.name}</NomeEvento>
+                                    <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                 </DisplayFlex>
-                                <LocalEvento>{evento.local}</LocalEvento>
-                                <ModalidadeEvento>{evento.modalidade}
-                                    <RiComputerLine style={{ marginLeft: '1rem' }} />
+                                <LocalEvento>{evento.location}</LocalEvento>
+                                <ModalidadeEvento>{evento.Sport?.name}
+                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
                                 </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                                <Role>{evento.role}</Role>
+                                <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
+                                <DescricaoEvento>{evento.description}</DescricaoEvento>
+                                
                             </Evento>
-                            <ModalContent key={key}>
-                                <Modal
-                                    isOpen={openModalFutebol}
-                                    onRequestClose={handleCloseModalFutebol}
-                                    style={customStylesModal}
-                                    contentLabel="Example Modal"
-                                >
-                                    {evento.role === 'Administrador' ?
-                                        <div>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={evento.nome} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={evento.local} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={evento.descricao} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                            </ModalContentInputs>
-                                        </div>
-                                        :
-                                        <div style={{ textAlign: 'center' }}>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <SairEvento>Sair do Evento</SairEvento>
-                                        </div>
-                                    }
-                                    <ModalButton onClick={handleCloseModalFutebol}>Fechar</ModalButton>
-                                </Modal>
-                            </ModalContent>
                         </div>
-                    )}
-                </EventosContent>
-                <EventosContent>
-                    {listaEventos.map((evento, key) => evento.modalidade === 'Counter-Strike' &&
-                        <div>
-                            <Evento key={key} onClick={handleOpenModalCS} >
+                    ) :
+                    events.map((evento, key) => evento.Sport?.name === filter && auth.user.id === evento.createdBy &&
+                        <div key={key}>
+                            <Evento onClick={() => {
+                                setOpenModal(true)
+                                setEvent(evento)
+                            }
+                            }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento.nome}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
+                                    <NomeEvento>{evento.name}</NomeEvento>
+                                    <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                 </DisplayFlex>
-                                <LocalEvento>{evento.local}</LocalEvento>
-                                <ModalidadeEvento>{evento.modalidade}
-                                    <RiComputerLine style={{ marginLeft: '1rem' }} />
+                                <LocalEvento>{evento.location}</LocalEvento>
+                                <ModalidadeEvento>{evento.Sport.name}
+                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
                                 </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                                <Role>{evento.role}</Role>
+                                <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
+                                <DescricaoEvento>{evento.description}</DescricaoEvento>
                             </Evento>
-                            <ModalContent key={key}>
-                                <Modal
-                                    isOpen={openModalCS}
-                                    onRequestClose={handleCloseModalCS}
-                                    style={customStylesModal}
-                                    contentLabel="Example Modal"
-                                >
-                                    {evento.role === 'Administrador' ?
-                                        <div>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={evento.nome} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={evento.local} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={evento.descricao} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                            </ModalContentInputs>
-                                        </div>
-                                        :
-                                        <div style={{ textAlign: 'center' }}>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <SairEvento>Sair do Evento</SairEvento>
-                                        </div>
-                                    }
-                                    <ModalButton onClick={handleCloseModalCS}>Fechar</ModalButton>
-                                </Modal>
-                            </ModalContent>
+                        
                         </div>
-                    )}
-                </EventosContent>
-                <EventosContent>
-                    {listaEventos.map((evento, key) => evento.modalidade === 'Volei' &&
-                        <div>
-                            <Evento key={key} onClick={handleOpenModalVolei} >
-                                <DisplayFlex>
-                                    <NomeEvento>{evento.nome}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.horario} - {evento.data}</HorarioEvento>
-                                </DisplayFlex>
-                                <LocalEvento>{evento.local}</LocalEvento>
-                                <ModalidadeEvento>{evento.modalidade}
-                                    <RiComputerLine style={{ marginLeft: '1rem' }} />
-                                </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.vagas}</VagasEvento>
-                                <Role>{evento.role}</Role>
-                            </Evento>
-                            <ModalContent key={key}>
-                                <Modal
-                                    isOpen={openModalVolei}
-                                    onRequestClose={handleCloseModalVolei}
-                                    style={customStylesModal}
-                                    contentLabel="Example Modal"
-                                >
-                                    {evento.role === 'Administrador' ?
-                                        <div>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={evento.nome} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={evento.local} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={evento.descricao} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                            </ModalContentInputs>
-                                        </div>
-                                        :
-                                        <div style={{ textAlign: 'center' }}>
-                                            <TitleModal>{evento.nome}</TitleModal>
-                                            <HorarioModal>{evento.horario}</HorarioModal>
-                                            <SairEvento>Sair do Evento</SairEvento>
-                                        </div>
-                                    }
-                                    <ModalButton onClick={handleCloseModalVolei}>Fechar</ModalButton>
-                                </Modal>
-                            </ModalContent>
-                        </div>
-                    )}
-                </EventosContent>
-            </AllEvents>
-            <VoltarButton onClick={() => navigate('/perfil')}>Voltar</VoltarButton>
+                    )
+                }
+            </EventosContent>
+            <ModalContent>
+                <ModalEvents  />
+            </ModalContent>
         </Container>
     )
 }
+

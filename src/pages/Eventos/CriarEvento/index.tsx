@@ -1,10 +1,11 @@
 import { Header } from '../../../components/Header';
 import { CadastroContainer, Local, Container, Data, Nome, SignupButton, Title, Vagas, Modalidade, DisplayFlex, Hora, Descricao } from './styles';
 import { useNavigate } from 'react-router-dom';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { api } from '../../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 
 
@@ -25,8 +26,11 @@ export const CriarEvento = () => {
     const [vagas, setVagas] = useState('')
     const [local, setLocal] = useState('')
     const [descricao, setDescricao] = useState('')
-    const [sportSelected, setSportSelected] = useState('ca2ab2b2-056a-42d7-87dc-bfb81310ea78')
+    const [sportSelected, setSportSelected] = useState('')
     const [sports, setSports] = useState<SportsProps[]>([]);
+
+    const [perfilUsuario, setPerfilUsuario] = useState([])
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
         const getSports = async () => {
@@ -35,20 +39,42 @@ export const CriarEvento = () => {
         }
         getSports();
 
+        const getPerfil = async () => {
+            const response = await api.get(`/users/me/${auth.user.id}`);
+            setPerfilUsuario(response.data);
+        }
+        getPerfil();
+
     }, [])
 
 
-    
+
 
 
     const navigate = useNavigate();
 
-
-
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if(parseInt(vagas) < 1){
+        console.log(auth.user.id)
+        console.log(sportSelected)
+        console.log(typeof auth.user.id)
+        if (parseInt(vagas) < 1) {
             toast.error('Número de vagas inválido');
+            return false;
+        }
+        if (sportSelected === '') {
+            toast.error('Escolha uma modalidade.');
+            return false;
+        }
+
+        let partesData = data.split("-");
+        let dataFormatada = new Date(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2]));
+        if(parseInt(partesData[0]) > 2023) {
+            toast.error('Insira uma data mais recente.');
+            return false;
+        }
+        if(dataFormatada < new Date()){
+            toast.error('Insira uma data possível.');
             return false;
         }
         const response = await api.post('/events', {
@@ -58,11 +84,14 @@ export const CriarEvento = () => {
             location: local,
             day: data,
             time: hora,
-            sportId: sportSelected
+            sportId: sportSelected,
+            createdBy: auth.user.id
         });
         setEvents(response.data);
         navigate('/eventos')
     }
+
+
 
     return (
         <Container>
@@ -75,6 +104,7 @@ export const CriarEvento = () => {
                     <Hora type="time" value={hora} onChange={(e) => setHora(e.target.value)} required />
                 </DisplayFlex>
                 <select onChange={(e) => setSportSelected(e.target.value)} name="select" required>
+                <option disabled selected>Modalidade</option>
                     {sports.map((item) =>
                         <option value={item.id}>{item.name}</option>
                     )}

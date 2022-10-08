@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import { Header } from '../../../components/Header';
-import { Evento } from '../../GerenciarEventos/styles';
 import Modal from 'react-modal';
 import { api } from '../../../services/api';
 
