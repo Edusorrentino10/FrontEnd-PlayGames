@@ -18,7 +18,6 @@ type SportsProps = {
 
 export const CriarEvento = () => {
 
-
     const [events, setEvents] = useState([])
     const [nome, setNome] = useState('')
     const [data, setData] = useState('')
@@ -28,8 +27,8 @@ export const CriarEvento = () => {
     const [descricao, setDescricao] = useState('')
     const [sportSelected, setSportSelected] = useState('')
     const [sports, setSports] = useState<SportsProps[]>([]);
-
     const [perfilUsuario, setPerfilUsuario] = useState([])
+    
     const auth = useContext(AuthContext);
 
     useEffect(() => {

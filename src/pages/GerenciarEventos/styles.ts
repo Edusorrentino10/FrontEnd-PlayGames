@@ -257,13 +257,20 @@ export const DisplayFlexInputs = styled.div`
         border-radius: 7px;
         border: 1px solid #212127;
     }
-        textarea {
+    textarea {
         display: flex;
         margin-bottom: 1rem;
     }
+    select {
+        margin-top: 1rem;
+        padding: 10px;
+        border-radius: 15px;
+        border: 0;
+        width: 55%;
+    }
 `;
 
-export const ModalContentInputs = styled.div`
+export const ModalContentInputs = styled.form`
     padding: 1rem 2.5rem;
     min-width: 600px;
 `;

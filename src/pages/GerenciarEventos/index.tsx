@@ -4,7 +4,7 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../assets/VSlogo.png';
@@ -57,8 +57,21 @@ export const GerenciarEventos = () => {
     const [event, setEvent] = useState<EventsProps>();
     const [events, setEvents] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
+
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('')
+
+    // estados pra pegar as alterações
+    const [putName, setPutName] = useState(event?.name);
+    const [putDescription, setPutDescription] = useState(event?.description);
+    const [putTeamsLimit, setPutTeamsLimit] = useState(event?.teamsLimit);
+    const [putDay, setPutDay] = useState(event?.day);
+    const [putTime, setPutTime] = useState(event?.time);
+    const [putLocation, setPutLocation] = useState(event?.location);
+    const [putSportId, setPutSportId] = useState(event?.Sport.id);
+
+
+
 
     const auth = useContext(AuthContext);
 
@@ -67,7 +80,7 @@ export const GerenciarEventos = () => {
         console.log(auth.user.id)
         const getEvents = async () => {
             const response = await api.get('/events');
-                setEvents(response.data);
+            setEvents(response.data);
         }
         getEvents();
 
@@ -76,47 +89,69 @@ export const GerenciarEventos = () => {
             setSports(response.data);
         }
         getSports();
-
     }, [])
+
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+
+
+        const putEvent = async () => {
+            const response = await api.put(`/events/${auth.user.id}`, {
+                name: putName,
+                day: putDay,
+                time: putTime,
+                location: putLocation,
+                teamsLimit: putTeamsLimit,
+                description: putDescription,
+                sportId: putSportId,
+            });
+
+        }
+        putEvent();
+    }
+
+
 
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
             contentLabel="Example Modal"
+            ariaHideApp={false}
         >
             <div>
-                                            <TitleModal>{event?.name}</TitleModal>
-                                            <HorarioModal>{event?.time}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={event?.name} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={event?.location} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={event?.description} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
-                                            </ModalContentInputs>
-                                        </div>
-                                        
+                <TitleModal>{event?.name}</TitleModal>
+                <ModalContentInputs onSubmit={handleSubmit}>
+                    <DisplayFlexInputs>
+                        <Nome placeholder={event?.name} type="text" />
+                        <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Data type="date" />
+                        <Hora type="time" />
+                        <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Local type="text" placeholder={event?.location} />
+                        <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Vagas placeholder='Valor' type="number" />
+                        <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Descricao placeholder={event?.description} />
+                        <button>Alterar Descrição</button>
+                    </DisplayFlexInputs>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ExcluirEvento>Excluir Evento</ExcluirEvento>
+                    </div>
+                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                </ModalContentInputs>
+            </div>
+
         </Modal>
     )
 
@@ -128,7 +163,7 @@ export const GerenciarEventos = () => {
 
 
 
-    
+
     return (
         <Container>
             <Header />
@@ -152,7 +187,7 @@ export const GerenciarEventos = () => {
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                
+
                             </Evento>
                         </div>
                     ) :
@@ -174,13 +209,13 @@ export const GerenciarEventos = () => {
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
                             </Evento>
-                        
+
                         </div>
                     )
                 }
             </EventosContent>
             <ModalContent>
-                <ModalEvents  />
+                <ModalEvents />
             </ModalContent>
         </Container>
     )
