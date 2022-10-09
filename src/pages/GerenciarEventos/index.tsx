@@ -4,13 +4,14 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../assets/VSlogo.png';
 import Modal from 'react-modal';
 import { api } from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
 
 const customStylesModal = {
     content: {
@@ -57,17 +58,28 @@ export const GerenciarEventos = () => {
     const [event, setEvent] = useState<EventsProps>();
     const [events, setEvents] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
+
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('')
+
+    // estados pra pegar as alterações
+    const [putName, setPutName] = useState('');
+    const [putDescription, setPutDescription] = useState('');
+    const [putTeamsLimit, setPutTeamsLimit] = useState('');
+    const [putDay, setPutDay] = useState('');
+    const [putTime, setPutTime] = useState('');
+    const [putLocation, setPutLocation] = useState('');
+    const [putSportId, setPutSportId] = useState(event?.Sport.id);
+    const [attInfos, setAttInfos] = useState(false);
+
 
     const auth = useContext(AuthContext);
 
 
     useEffect(() => {
-        console.log(auth.user.id)
         const getEvents = async () => {
             const response = await api.get('/events');
-                setEvents(response.data);
+            setEvents(response.data);
         }
         getEvents();
 
@@ -76,47 +88,104 @@ export const GerenciarEventos = () => {
             setSports(response.data);
         }
         getSports();
+    }, [attInfos])
 
-    }, [])
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (event !== undefined) {
+            if (putTeamsLimit && parseInt(putTeamsLimit) < 1) {
+                toast.error('Número de vagas inválido');
+                return false;
+            }
+            if (putTime === '') {
+                toast.error('Escolha um horário.');
+                return false;
+            }
+            if (putLocation === '') {
+                toast.error('Escolha um local.');
+                return false;
+            }
+            if (putDescription === '') {
+                toast.error('Insira uma descrição.');
+                return false;
+            }
+            if (putDay !== undefined) {
+                let partesData = putDay.split("-");
+                let dataFormatada = new Date(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2]));
+                if (parseInt(partesData[0]) > 2023) {
+                    toast.error('Insira uma data mais recente.');
+                    return false;
+                }
+                if (dataFormatada < new Date()) {
+                    toast.error('Insira uma data possível.');
+                    return false;
+                }
+                console.log([{ putName, putDay, putTime, putLocation, putTeamsLimit, putDescription, putSportId }])
+                const response = await api.put(`/events/${event?.id}`, {
+                    name: putName,
+                    day: putDay,
+                    time: putTime,
+                    location: putLocation,
+                    teamsLimit: putTeamsLimit ? parseInt(putTeamsLimit) : 0,
+                    description: putDescription,
+                    sportId: putSportId,
+                });
+                setAttInfos(!attInfos);
+                setOpenModal(false);
+            }
+            else {
+                toast.error('Escolha um data.')
+                return false;
+            }
+        }
+    }
+
+    const handleDelete = async (e: FormEvent) => {
+        e.preventDefault();
+        const response = await api.delete(`/events/${event?.id}`);
+        setAttInfos(!attInfos);
+        setOpenModal(false);
+    };
 
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
             contentLabel="Example Modal"
+            ariaHideApp={false}
         >
             <div>
-                                            <TitleModal>{event?.name}</TitleModal>
-                                            <HorarioModal>{event?.time}</HorarioModal>
-                                            <ModalContentInputs>
-                                                <DisplayFlexInputs>
-                                                    <Nome placeholder={event?.name} type="text" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Data type="date" />
-                                                    <Hora type="time" />
-                                                    <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Local type="text" placeholder={event?.location} />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Vagas placeholder='Valor' type="number" />
-                                                    <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
-                                                </DisplayFlexInputs>
-                                                <DisplayFlexInputs>
-                                                    <Descricao placeholder={event?.description} />
-                                                    <button>Alterar Descrição</button>
-                                                </DisplayFlexInputs>
-                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                    <ExcluirEvento>Excluir Evento</ExcluirEvento>
-                                                </div>
-                                                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
-                                            </ModalContentInputs>
-                                        </div>
-                                        
+                <TitleModal>{event?.name}</TitleModal>
+                <ModalContentInputs onSubmit={handleSubmit}>
+                    <DisplayFlexInputs>
+                        <span><strong>Nome: </strong></span>
+                        <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <span><strong>Data/Hora: </strong></span>
+                        <Data value={putDay} onChange={(e) => setPutDay(e.target.value)} type="date" required />
+                        <Hora value={putTime} onChange={(e) => setPutTime(e.target.value)} type="time" required />
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <span><strong>Local: </strong></span>
+                        <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} required />
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <span><strong>Vagas: </strong></span>
+                        <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <br />
+                        <span><strong>Descrição: </strong></span>
+                        <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                        <button>Salvar Alterações</button>
+                    </DisplayFlexInputs>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
+                    </div>
+                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                </ModalContentInputs>
+            </div>
         </Modal>
     )
 
@@ -128,7 +197,7 @@ export const GerenciarEventos = () => {
 
 
 
-    
+
     return (
         <Container>
             <Header />
@@ -152,7 +221,7 @@ export const GerenciarEventos = () => {
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                
+
                             </Evento>
                         </div>
                     ) :
@@ -174,15 +243,15 @@ export const GerenciarEventos = () => {
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
                             </Evento>
-                        
+
                         </div>
                     )
                 }
             </EventosContent>
             <ModalContent>
-                <ModalEvents  />
+                <ModalEvents />
             </ModalContent>
+            <ToastContainer />
         </Container>
     )
 }
-
