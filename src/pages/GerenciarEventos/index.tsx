@@ -4,7 +4,11 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+=======
+import { FormEvent, useContext, useEffect, useState } from 'react';
+>>>>>>> a8ca73646b0dbac31537860bdd85ab7cf336b039
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../assets/VSlogo.png';
@@ -63,6 +67,7 @@ export const GerenciarEventos = () => {
     const [filter, setFilter] = useState('')
 
     // estados pra pegar as alterações
+<<<<<<< HEAD
     const [putName, setPutName] = useState('');
     const [putDescription, setPutDescription] = useState('');
     const [putTeamsLimit, setPutTeamsLimit] = useState('');
@@ -71,6 +76,17 @@ export const GerenciarEventos = () => {
     const [putLocation, setPutLocation] = useState('');
     const [putSportId, setPutSportId] = useState(event?.Sport.id);
     const [attInfos, setAttInfos] = useState(false);
+=======
+    const [putName, setPutName] = useState(event?.name);
+    const [putDescription, setPutDescription] = useState(event?.description);
+    const [putTeamsLimit, setPutTeamsLimit] = useState(event?.teamsLimit);
+    const [putDay, setPutDay] = useState(event?.day);
+    const [putTime, setPutTime] = useState(event?.time);
+    const [putLocation, setPutLocation] = useState(event?.location);
+    const [putSportId, setPutSportId] = useState(event?.Sport.id);
+
+
+>>>>>>> a8ca73646b0dbac31537860bdd85ab7cf336b039
 
 
     const auth = useContext(AuthContext);
@@ -88,6 +104,7 @@ export const GerenciarEventos = () => {
             setSports(response.data);
         }
         getSports();
+<<<<<<< HEAD
     }, [attInfos])
 
     const handleSubmit = async (e: FormEvent) => {
@@ -146,6 +163,32 @@ export const GerenciarEventos = () => {
         setAttInfos(!attInfos);
         setOpenModal(false);
     };
+=======
+    }, [])
+>>>>>>> a8ca73646b0dbac31537860bdd85ab7cf336b039
+
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+
+
+        const putEvent = async () => {
+            const response = await api.put(`/events/${auth.user.id}`, {
+                name: putName,
+                day: putDay,
+                time: putTime,
+                location: putLocation,
+                teamsLimit: putTeamsLimit,
+                description: putDescription,
+                sportId: putSportId,
+            });
+
+        }
+        putEvent();
+    }
+
+
 
     const ModalEvents = () => (
         <Modal
@@ -158,6 +201,7 @@ export const GerenciarEventos = () => {
                 <TitleModal>{event?.name}</TitleModal>
                 <ModalContentInputs onSubmit={handleSubmit}>
                     <DisplayFlexInputs>
+<<<<<<< HEAD
                         <span><strong>Nome: </strong></span>
                         <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
                     </DisplayFlexInputs>
@@ -182,10 +226,38 @@ export const GerenciarEventos = () => {
                     </DisplayFlexInputs>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
+=======
+                        <Nome placeholder={event?.name} type="text" />
+                        <button style={{ marginLeft: '1rem' }} >Alterar Nome</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Data type="date" />
+                        <Hora type="time" />
+                        <button style={{ marginLeft: '1rem' }} >Alterar Data e Hora</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Local type="text" placeholder={event?.location} />
+                        <button style={{ marginLeft: '1rem' }}>Alterar Local</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Vagas placeholder='Valor' type="number" />
+                        <button style={{ marginLeft: '1rem' }}>Alterar Vagas</button>
+                    </DisplayFlexInputs>
+                    <DisplayFlexInputs>
+                        <Descricao placeholder={event?.description} />
+                        <button>Alterar Descrição</button>
+                    </DisplayFlexInputs>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <ExcluirEvento>Excluir Evento</ExcluirEvento>
+>>>>>>> a8ca73646b0dbac31537860bdd85ab7cf336b039
                     </div>
                     <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
                 </ModalContentInputs>
             </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a8ca73646b0dbac31537860bdd85ab7cf336b039
         </Modal>
     )
 
