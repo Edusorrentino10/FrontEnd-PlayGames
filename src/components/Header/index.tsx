@@ -22,7 +22,7 @@ export const Header = () => {
                 {auth.user &&
                     <div style={{display:'flex'}}>
                         <Perfil onClick={() => navigate('/perfil')}>Perfil</Perfil>
-                        <Equipe onClick={() => navigate('/equipes')}>Equipe</Equipe>
+                        <Equipe onClick={() => navigate('/convites')}>Convites</Equipe>
                         <Eventos onClick={() => navigate('/eventos')}>Eventos</Eventos>
                     </div>
                 }
