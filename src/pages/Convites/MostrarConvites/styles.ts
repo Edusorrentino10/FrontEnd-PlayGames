@@ -182,8 +182,9 @@ export const DivEquipes = styled.div`
     justify-content: center;
     padding: 0.3rem 2rem;
     gap: 2rem;
+    margin-top: 1.5rem;
     fieldset {
-        padding: 0.8rem 5rem;
+        padding: 0.8rem 10rem;
         legend {
             cursor: context-menu;
             text-align: center;
@@ -339,11 +340,31 @@ export const Descricao = styled.textarea`
 `;
 
 export const Cancelar = styled.button`
-    padding: 5px;
+    background-color: #ff7815;
+    padding: 0.4rem 1rem;
+    border: 1px solid #ff7815;
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 1rem 2rem;
+    float: right;
+    transition: 0.5s;
     cursor: pointer;
+    &:hover {
+        filter: brightness(0.93);
+    }
 `
 
 export const Aceitar = styled.button`
-    padding: 5px;
+    background-color: #ff7815;
+    padding: 0.4rem 1rem;
+    border: 1px solid #ff7815;
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 1rem 2rem;
+    float: right;
+    transition: 0.5s;
     cursor: pointer;
+    &:hover {
+        filter: brightness(0.93);
+    }
 `

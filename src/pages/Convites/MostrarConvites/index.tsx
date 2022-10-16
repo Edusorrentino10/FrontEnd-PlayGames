@@ -107,18 +107,30 @@ export const MostrarConvites = () => {
 
 
     // Só exemplo
-    const handleCancelar = async (e: FormEvent) => {
-        e.preventDefault();
-        // const response = await api.delete(`/events/${event?.id}`);
-        // setAttInfos(!attInfos);
-        // setOpenModal(false);
+    const handleCancelar = async (idEvent: any) => {
+        const response = await api.post(`/users/rejectInvitation`, {
+            eventId: idEvent,
+            userId: auth.user.id
+        });
+        removeEvent(idEvent)
+        toast.success("Convite recusado!")
+        setOpenModal(false);
     };
 
-    const handleAceitar = async (e: FormEvent) => {
-        e.preventDefault();
-        // const response = await api.delete(`/events/${event?.id}`);
-        // setAttInfos(!attInfos);
-        // setOpenModal(false);
+    const handleAceitar = async (idEvent: any) => {
+        const response = await api.post(`/users/acceptInvitation`, {
+            eventId: idEvent,
+            userId: auth.user.id
+        });
+        removeEvent(idEvent)
+        toast.success("Convite aceito!")
+        setOpenModal(false);
+    };
+
+    const removeEvent = (idEvent: string) => {
+        setEvents((current) =>
+            current.filter((event) => event.id !== idEvent)
+        );
     };
 
     const ModalEvents = () => (
@@ -130,12 +142,11 @@ export const MostrarConvites = () => {
             <TitleModal>{event?.name}</TitleModal>
             <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
             <HorarioModal>Vagas: {event?.teamsLimit}</HorarioModal>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <ImgModal src={vslogo} alt="" />
-            </div>
             <DivEquipes>
                 <fieldset style={{ border: '3px solid #ffa562' }}>
-                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{event?.name}</legend>
+                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
+                        Participantes
+                    </legend>
                     {/* <div>
                                             {evento.jogadores.map((jogador, key) =>
                                                 <p key={key}>{jogador}</p>
@@ -144,9 +155,9 @@ export const MostrarConvites = () => {
                 </fieldset>
                 {/** Time Visitante */}
             </DivEquipes>
-            <div style={{marginTop:"2rem", marginBottom:"1.5rem", display:'flex', justifyContent:'center', gap:'2rem'}}>
-            <Cancelar onClick={handleCancelar}>Cancelar</Cancelar>
-            <Aceitar onClick={handleAceitar}>Aceitar</Aceitar>
+            <div style={{marginTop:"1rem", display:'flex', justifyContent:'center', gap:'2rem'}}>
+                <Aceitar onClick={() => handleAceitar(event?.id)}>Aceitar</Aceitar>
+                <Cancelar onClick={() => handleCancelar(event?.id)}>Cancelar</Cancelar>
             </div>
             <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
         </Modal>
@@ -182,7 +193,7 @@ export const MostrarConvites = () => {
                                     <GiSoccerBall style={{ marginLeft: '1rem' }} />
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                                <DescricaoEvento>{evento.description}</DescricaoEvento>
+                                <DescricaoEvento>Convidado</DescricaoEvento>
 
                             </Evento>
                         </div>
