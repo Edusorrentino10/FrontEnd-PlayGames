@@ -157,7 +157,7 @@ export const MostrarConvites = () => {
             </DivEquipes>
             <div style={{marginTop:"1rem", display:'flex', justifyContent:'center', gap:'2rem'}}>
                 <Aceitar onClick={() => handleAceitar(event?.id)}>Aceitar</Aceitar>
-                <Cancelar onClick={() => handleCancelar(event?.id)}>Cancelar</Cancelar>
+                <Cancelar onClick={() => handleCancelar(event?.id)}>Recusar</Cancelar>
             </div>
             <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
         </Modal>
