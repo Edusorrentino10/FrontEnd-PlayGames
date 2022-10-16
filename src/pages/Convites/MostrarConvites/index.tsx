@@ -113,7 +113,7 @@ export const MostrarConvites = () => {
             userId: auth.user.id
         });
         removeEvent(idEvent)
-        toast.success("Convite recusado!")
+        toast.error("Convite recusado!")
         setOpenModal(false);
     };
 
