@@ -64,6 +64,34 @@ export const Eventos = styled.div`
    }
 `;
 
+export const MeusEventos = styled.div`
+    font-size: 1.2rem;
+    color: #fff;
+    margin-left: 10px;
+    padding: 10px;
+    font-weight: bold;
+    &:hover {
+    background: #ddd;
+    color: #FF7815;
+    cursor: pointer;
+    border-radius: 10px;
+   }
+`;
+
+export const MinhasEquipes = styled.div`
+    font-size: 1.2rem;
+    color: #fff;
+    margin-left: 25px;
+    padding: 10px;
+    font-weight: bold;
+    &:hover {
+    background: #ddd;
+    color: #FF7815;
+    cursor: pointer;
+    border-radius: 10px;
+   }
+`;
+
 export const Logout = styled.div`
     font-size: 1rem;
     color: #fff;
