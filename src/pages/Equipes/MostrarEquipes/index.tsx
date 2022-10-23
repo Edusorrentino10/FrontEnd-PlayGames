@@ -98,7 +98,19 @@ export const MostrarEquipes = () => {
         });
         console.log(response)
         toast.success("Solicitação enviada!")
+        setOpenModal(false)
     }
+
+    // const rejectedInvitation = async () => {
+    //     const response = await api.post('/users/teamInvitation', {
+    //         teamId: team?.id,
+    //         userId: auth.user.id,
+    //         invitation: "rejected"
+    //     });
+    //     console.log(response)
+    //     toast.warn("Convite rejeitado!")
+    //     setOpenModal(false)
+    // }
 
     const ModalEvents = () => (
         <Modal
@@ -119,14 +131,9 @@ export const MostrarEquipes = () => {
                         )}
                     </div> }
                 </fieldset>
-                {/** Time Visitante */}
-                {/*<fieldset style={{ border: '3px solid #ffa562' }}>*/}
-                {/*    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>*/}
-                {/*    <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>*/}
-                {/*</fieldset>*/}
             </DivEquipes>
             <div style={{display: 'flex', justifyContent: 'space-around'}}>
-                <ModalButton onClick={() => sendInvitation()}>Entrar</ModalButton>
+                <ModalButton onClick={() => sendInvitation()}>Enviar Convite</ModalButton>
                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
             </div>
         </Modal>

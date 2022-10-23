@@ -52,12 +52,24 @@ type EventsProps = {
     }
 }
 
+type ConviteProps = {
+    avatar: string | null,
+    createdAt: string | null,
+    email: string | null,
+    id: string | null,
+    name: string | null,
+    password: string | null,
+    updatedAt: string | null,
+}
+
 export const MinhasEquipes = () => {
     const navigate = useNavigate();
 
     const [event, setEvent] = useState<EventsProps>();
-    const [events, setEvents] = useState<EventsProps[]>([]);
+    const [teamsAdm, setTeamsAdm] = useState<EventsProps[]>([]);
+    const [teamsParticipante, setTeamsParticipante] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
+    const [invitations, setInvitations] = useState([]); // bota os convitres num estado
 
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('Administrador')
@@ -77,11 +89,28 @@ export const MinhasEquipes = () => {
 
 
     useEffect(() => {
-        const getEvents = async () => {
-            const response = await api.get('/events');
-            setEvents(response.data);
+        const getTeamsAdm = async () => {
+            const response = await api.get(`/teams/findMyTeams/${auth.user.id}`);
+            setTeamsAdm(response.data);
+            
+            // let convites = [];
+            // for(let i = 0; i < response.data.length; i++) {
+            //     convites = response.data[i].invitations;
+            // }
+            // setInvitations(convites)
+            // console.log(invitations)
+            // console.log('aa')
         }
-        getEvents();
+        getTeamsAdm();
+
+
+
+        const getTeamsParticipante = async () => {
+            const response = await api.get(`/teams/findMyTeamsImIn/${auth.user.id}`);
+            setTeamsParticipante(response.data);
+            console.log(response.data)
+        }
+        getTeamsParticipante();
 
         const getSports = async () => {
             const response = await api.get('/sports');
@@ -147,7 +176,7 @@ export const MinhasEquipes = () => {
         setOpenModal(false);
     };
 
-    const ModalEvents = () => (
+    const ModalTeams = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
@@ -161,19 +190,7 @@ export const MinhasEquipes = () => {
                         <span><strong>Nome: </strong></span>
                         <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
                     </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Data/Hora: </strong></span>
-                        <Data value={putDay} onChange={(e) => setPutDay(e.target.value)} type="date" required />
-                        <Hora value={putTime} onChange={(e) => setPutTime(e.target.value)} type="time" required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Local: </strong></span>
-                        <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Vagas: </strong></span>
-                        <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
-                    </DisplayFlexInputs>
+
                     <DisplayFlexInputs>
                         <br />
                         <span><strong>Descrição: </strong></span>
@@ -181,7 +198,7 @@ export const MinhasEquipes = () => {
                         <button>Salvar Alterações</button>
                     </DisplayFlexInputs>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
+                        <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
                     </div>
                     <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
                 </ModalContentInputs>
@@ -213,7 +230,7 @@ export const MinhasEquipes = () => {
 
             <EventosContent>
                 {filter === 'Administrador' ?
-                    events.map((evento, key) => auth.user.id === evento.createdBy &&
+                    teamsAdm.map((evento, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
@@ -222,20 +239,15 @@ export const MinhasEquipes = () => {
                             }>
                                 <DisplayFlex>
                                     <NomeEvento>{evento.name}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                 </DisplayFlex>
-                                <LocalEvento>{evento.location}</LocalEvento>
-                                <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                                </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
+                                {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
                                 <ValueFiltro>Administrador</ValueFiltro>    
                             </Evento>
                         </div>
                     ) : filter === 'Participando' ?
                         // filtrar com o atributo que verifica se o user é participante mas nao é administrador.
-                        events.map((evento, key) => auth.user.id !== evento.createdBy &&
+                        teamsParticipante.map((evento, key) =>
                             <div key={key}>
                                 <Evento onClick={() => {
                                     setOpenModal(true)
@@ -244,36 +256,27 @@ export const MinhasEquipes = () => {
                                 }>
                                     <DisplayFlex>
                                         <NomeEvento>{evento.name}</NomeEvento>
-                                        <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
                                     </DisplayFlex>
-                                    <LocalEvento>{evento.location}</LocalEvento>
-                                    <ModalidadeEvento>{evento.Sport?.name}
-                                        <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                                    </ModalidadeEvento>
-                                    <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
+                                    {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                     <DescricaoEvento>{evento.description}</DescricaoEvento>
                                     <ValueFiltro>Participando</ValueFiltro> 
                                 </Evento>
                             </div>
                         ) : filter === 'Convidado' ?
                             // filtrar com o atributo que verifica se o user foi convidado e pegar os convites
-                            events.map((evento, key) => auth.user.id !== evento.createdBy &&
+                            invitations?.map((convite, key) =>
                                 <div key={key}>
                                     <Evento onClick={() => {
                                         setOpenModal(true)
-                                        setEvent(evento)
+                                        setEvent(convite)
                                     }
                                     }>
                                         <DisplayFlex>
-                                            <NomeEvento>{evento.name}</NomeEvento>
-                                            <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
+                                            <NomeEvento>{convite}</NomeEvento>
+                                           
                                         </DisplayFlex>
-                                        <LocalEvento>{evento.location}</LocalEvento>
-                                        <ModalidadeEvento>{evento.Sport?.name}
-                                            <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                                        </ModalidadeEvento>
-                                        <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                                        <DescricaoEvento>{evento.description}</DescricaoEvento>
+                                        {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
+                                        <DescricaoEvento>{convite}</DescricaoEvento>
                                         <ValueFiltro>Convidado</ValueFiltro>    
                                     </Evento>
                                 </div>
@@ -281,7 +284,7 @@ export const MinhasEquipes = () => {
                 }
             </EventosContent>
             <ModalContent>
-                <ModalEvents />
+                <ModalTeams />
             </ModalContent>
             <ToastContainer />
         </Container>
