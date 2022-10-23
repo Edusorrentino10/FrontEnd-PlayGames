@@ -69,7 +69,7 @@ export const MeusEventos = () => {
     const [putDay, setPutDay] = useState('');
     const [putTime, setPutTime] = useState('');
     const [putLocation, setPutLocation] = useState('');
-    const [putSportId, setPutSportId] = useState(event?.Sport.id);
+    const [putSportId, setPutSportId] = useState(event?.Sport?.id);
     const [attInfos, setAttInfos] = useState(false);
 
 

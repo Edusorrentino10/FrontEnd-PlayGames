@@ -180,7 +180,7 @@ export const CSFilter = styled.div<{ isActive: boolean }>`
 export const DivEquipes = styled.div`
     display: flex;
     justify-content: center;
-    padding: 0.3rem 2rem;
+    padding: 1rem 2rem;
     gap: 2rem;
     fieldset {
         padding: 0.8rem 5rem;
@@ -249,3 +249,10 @@ export const ModalButton = styled.button`
     
 `;
 
+export const Nome = styled.input`
+    margin-top: 3rem;
+    padding: 10px;
+    border-radius: 15px;
+    border: 0;
+    width: 50%;
+`;

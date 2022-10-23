@@ -4,12 +4,14 @@ import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../../assets/VSlogo.png';
 import Modal from 'react-modal';
 import { api } from '../../../services/api';
+import {AuthContext} from "../../../contexts/AuthContext";
+import {toast, ToastContainer} from "react-toastify";
 
 const customStylesModal = {
     content: {
@@ -49,22 +51,36 @@ type EventsProps = {
     }
 }
 
+type TeamsProps = {
+    id: string,
+    name: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    users: [{
+        id: string,
+        name: string
+    }]
+}
+
 export const MostrarEquipes = () => {
     const navigate = useNavigate();
+    const auth = useContext(AuthContext);
 
-    const [event, setEvent] = useState<EventsProps>();
-    const [events, setEvents] = useState<EventsProps[]>([]);
+    const [team, setTeam] = useState<TeamsProps>();
+    const [teams, setTeams] = useState<TeamsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('')
 
     useEffect(() => {
 
-        const getEvents = async () => {
-            const response = await api.get('/events');
-            setEvents(response.data);
+        const getTeams = async () => {
+            const response = await api.get('/teams');
+            console.log(response)
+            setTeams(response.data);
         }
-        getEvents();
+        getTeams();
 
         const getSports = async () => {
             const response = await api.get('/sports');
@@ -73,35 +89,46 @@ export const MostrarEquipes = () => {
         getSports();
 
     }, [])
+    
+    const sendInvitation = async () => {
+        const response = await api.post('/users/teamInvitation', {
+            teamId: team?.id,
+            userId: auth.user.id,
+            invitation: "send"
+        });
+        console.log(response)
+        toast.success("Solicitação enviada!")
+    }
 
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
             contentLabel="Example Modal"
+            ariaHideApp={false}
         >
-            <TitleModal>{event?.name}</TitleModal>
-            <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
-            <HorarioModal>Vagas: {event?.teamsLimit}</HorarioModal>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <ImgModal src={vslogo} alt="" />
-            </div>
+            <TitleModal>Equipe</TitleModal>
             <DivEquipes>
                 <fieldset style={{ border: '3px solid #ffa562' }}>
-                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>{event?.name}</legend>
-                    {/* <div>
-                                            {evento.jogadores.map((jogador, key) =>
-                                                <p key={key}>{jogador}</p>
-                                            )}
-                                        </div> */}
+                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
+                        {team?.name}
+                    </legend>
+                    { <div>
+                        {team?.users.map((jogador, key) =>
+                            <p key={key}>{jogador.name}</p>
+                        )}
+                    </div> }
                 </fieldset>
                 {/** Time Visitante */}
-                <fieldset style={{ border: '3px solid #ffa562' }}>
-                    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>
-                    <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>
-                </fieldset>
+                {/*<fieldset style={{ border: '3px solid #ffa562' }}>*/}
+                {/*    <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>Time Visitante</legend>*/}
+                {/*    <button onClick={(e) => e.preventDefault()}>Inscrever Equipe</button>*/}
+                {/*</fieldset>*/}
             </DivEquipes>
-            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+            <div style={{display: 'flex', justifyContent: 'space-around'}}>
+                <ModalButton onClick={() => sendInvitation()}>Entrar</ModalButton>
+                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+            </div>
         </Modal>
     )
 
@@ -111,53 +138,42 @@ export const MostrarEquipes = () => {
             <Content>
                 <Title>Equipes</Title>
                 <CriarEventoButton onClick={() => navigate('/criar-equipe')} type="submit" value="Criar Equipe" />
-                <select onChange={(e) => setFilter(e.target.value)} name="select">
-                    <option defaultChecked value={''}>Todos</option>
-
-                    {sports.map((item) =>
-                        <option value={item.name}>{item.name}</option>
-                    )}
-                </select>
+                {/*<select onChange={(e) => setFilter(e.target.value)} name="select">*/}
+                {/*    <option defaultChecked value={''}>Todos</option>*/}
+                
+                {/*    {sports.map((item) =>*/}
+                {/*        <option value={item.name}>{item.name}</option>*/}
+                {/*    )}*/}
+                {/*</select>*/}
+                <input type="text" placeholder="Digite o nome da equipe" onChange={(e) => setFilter(e.target.value)} style={{marginTop:'1.2rem'}}/>
             </Content>
             <EventosContent>
-                {filter === '' ?
-                    events.map((evento, key) =>
+               {filter === '' ?
+                    teams.map((team, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
-                                setEvent(evento)
+                                setTeam(team)
                             }
                             }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento?.name}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
+                                    <NomeEvento>{team.name}</NomeEvento>
                                 </DisplayFlex>
-                                <LocalEvento>{evento.location}</LocalEvento>
-                                <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                                </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                                <DescricaoEvento>{evento.description}</DescricaoEvento>
+                                <DescricaoEvento>{team.description}</DescricaoEvento>
                             </Evento>
                         </div>
                     ) :
-                    events.map((evento, key) => evento.Sport?.name === filter &&
+                    teams.map((team, key) => team.name.toLowerCase().startsWith(filter.toLowerCase()) &&
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
-                                setEvent(evento)
+                                setTeam(team)
                             }
                             }>
                                 <DisplayFlex>
-                                    <NomeEvento>{evento?.name}</NomeEvento>
-                                    <HorarioEvento><AiFillClockCircle /> {evento.day} - {evento.time}</HorarioEvento>
+                                    <NomeEvento>{team.name}</NomeEvento>
                                 </DisplayFlex>
-                                <LocalEvento>{evento.location}</LocalEvento>
-                                <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
-                                </ModalidadeEvento>
-                                <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
-                                <DescricaoEvento>{evento.description}</DescricaoEvento>
+                                <DescricaoEvento>{team.description}</DescricaoEvento>
                             </Evento>
                         </div>
                     )
@@ -166,6 +182,7 @@ export const MostrarEquipes = () => {
             <ModalContent>
                 <ModalEvents />
             </ModalContent>
+            <ToastContainer />
         </Container>
     )
 }
