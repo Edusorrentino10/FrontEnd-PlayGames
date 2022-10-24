@@ -16,6 +16,7 @@ export const Content = styled.div`
     border: 0;
     width: 7rem;
     }
+    
 `;
 
 export const Title = styled.div`

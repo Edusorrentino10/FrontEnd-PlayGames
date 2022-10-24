@@ -101,16 +101,6 @@ export const MostrarEquipes = () => {
         setOpenModal(false)
     }
 
-    // const rejectedInvitation = async () => {
-    //     const response = await api.post('/users/teamInvitation', {
-    //         teamId: team?.id,
-    //         userId: auth.user.id,
-    //         invitation: "rejected"
-    //     });
-    //     console.log(response)
-    //     toast.warn("Convite rejeitado!")
-    //     setOpenModal(false)
-    // }
 
     const ModalEvents = () => (
         <Modal
@@ -152,7 +142,7 @@ export const MostrarEquipes = () => {
                 {/*        <option value={item.name}>{item.name}</option>*/}
                 {/*    )}*/}
                 {/*</select>*/}
-                <input type="text" placeholder="Digite o nome da equipe" onChange={(e) => setFilter(e.target.value)} style={{marginTop:'1.2rem'}}/>
+                <input type="text" placeholder="Digite o nome da equipe" onChange={(e) => setFilter(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>
             </Content>
             <EventosContent>
                {filter === '' ?

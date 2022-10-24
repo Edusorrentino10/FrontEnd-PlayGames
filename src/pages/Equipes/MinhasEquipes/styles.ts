@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-
+    strong {
+        font-size: 1.5rem;
+    }
 `;
 
 export const Content = styled.div`
@@ -253,8 +255,14 @@ export const ModalButton = styled.button`
     
 `;
 
+export const DivFrase = styled.div`
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 3rem;
+`
+
 export const DisplayFlexInputs = styled.div`
-    
+
     button {
         padding: 0.4rem;
         cursor: pointer;

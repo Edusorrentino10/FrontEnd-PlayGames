@@ -1,5 +1,5 @@
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro, DivFrase } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -53,23 +53,24 @@ type EventsProps = {
 }
 
 type ConviteProps = {
-    avatar: string | null,
-    createdAt: string | null,
-    email: string | null,
-    id: string | null,
-    name: string | null,
-    password: string | null,
-    updatedAt: string | null,
+    avatar?: string,
+    createdAt?: string,
+    email?: string,
+    id?: string,
+    name?: string,
+    password?: string,
+    updatedAt?: string,
 }
 
 export const MinhasEquipes = () => {
     const navigate = useNavigate();
 
     const [event, setEvent] = useState<EventsProps>();
+    const [cvt, setCvt] = useState<ConviteProps>();
     const [teamsAdm, setTeamsAdm] = useState<EventsProps[]>([]);
     const [teamsParticipante, setTeamsParticipante] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
-    const [invitations, setInvitations] = useState([]); // bota os convitres num estado
+    const [invitations, setInvitations] = useState<ConviteProps[]>([]); // bota os convitres num estado
 
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('Administrador')
@@ -92,14 +93,17 @@ export const MinhasEquipes = () => {
         const getTeamsAdm = async () => {
             const response = await api.get(`/teams/findMyTeams/${auth.user.id}`);
             setTeamsAdm(response.data);
-            
-            // let convites = [];
-            // for(let i = 0; i < response.data.length; i++) {
-            //     convites = response.data[i].invitations;
-            // }
-            // setInvitations(convites)
-            // console.log(invitations)
-            // console.log('aa')
+
+            const pegarConvites = async () => {
+                let convites = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    convites = response.data[i].invitations;
+                }
+                setInvitations(convites)
+                console.log(invitations)
+                console.log('aa')
+            }
+            pegarConvites()
         }
         getTeamsAdm();
 
@@ -119,55 +123,6 @@ export const MinhasEquipes = () => {
         getSports();
     }, [attInfos])
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        if (event !== undefined) {
-            if (putTeamsLimit && parseInt(putTeamsLimit) < 1) {
-                toast.error('Número de vagas inválido');
-                return false;
-            }
-            if (putTime === '') {
-                toast.error('Escolha um horário.');
-                return false;
-            }
-            if (putLocation === '') {
-                toast.error('Escolha um local.');
-                return false;
-            }
-            if (putDescription === '') {
-                toast.error('Insira uma descrição.');
-                return false;
-            }
-            if (putDay !== undefined) {
-                let partesData = putDay.split("-");
-                let dataFormatada = new Date(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2]));
-                if (parseInt(partesData[0]) > 2023) {
-                    toast.error('Insira uma data mais recente.');
-                    return false;
-                }
-                if (dataFormatada < new Date()) {
-                    toast.error('Insira uma data possível.');
-                    return false;
-                }
-                console.log([{ putName, putDay, putTime, putLocation, putTeamsLimit, putDescription, putSportId }])
-                const response = await api.put(`/events/${event?.id}`, {
-                    name: putName,
-                    day: putDay,
-                    time: putTime,
-                    location: putLocation,
-                    teamsLimit: putTeamsLimit ? parseInt(putTeamsLimit) : 0,
-                    description: putDescription,
-                    sportId: putSportId,
-                });
-                setAttInfos(!attInfos);
-                setOpenModal(false);
-            }
-            else {
-                toast.error('Escolha um data.')
-                return false;
-            }
-        }
-    }
 
     const handleDelete = async (e: FormEvent) => {
         e.preventDefault();
@@ -176,33 +131,79 @@ export const MinhasEquipes = () => {
         setOpenModal(false);
     };
 
+    const sendInvitation = async (e: any) => {
+        e.preventDefault();
+        try {
+            const response = await api.post('/users/teamInvitation', {
+                teamId: event?.id,
+                userId: auth.user.id,
+                invitation: "accepted"
+            });
+            toast.success("Convite aceito!")
+            setOpenModal(false)
+        } catch(error){
+            console.log(error)
+        }
+    }
+    const rejectedInvitation = async (e: any) => {
+        e.preventDefault();
+        const response = await api.post('/users/teamInvitation', {
+            teamId: event?.id,
+            userId: auth.user.id,
+            invitation: "rejected"
+        });
+
+        toast.warn("Convite rejeitado!")
+        setOpenModal(false)
+    }
+
     const ModalTeams = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
             contentLabel="Example Modal"
             ariaHideApp={false}
-        >
-            <div>
-                <TitleModal>{event?.name}</TitleModal>
-                <ModalContentInputs onSubmit={handleSubmit}>
-                    <DisplayFlexInputs>
-                        <span><strong>Nome: </strong></span>
-                        <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
-                    </DisplayFlexInputs>
 
-                    <DisplayFlexInputs>
-                        <br />
-                        <span><strong>Descrição: </strong></span>
-                        <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
-                        <button>Salvar Alterações</button>
-                    </DisplayFlexInputs>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
-                    </div>
-                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
-                </ModalContentInputs>
-            </div>
+        >
+            <>
+                {filter === 'Administrador' || filter === 'Participando' ?
+                    <div>
+                        <TitleModal>{event?.name}</TitleModal>
+                        <ModalContentInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Nome: </strong></span>
+                                <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                            </DisplayFlexInputs>
+
+                            <DisplayFlexInputs>
+                                <br />
+                                <span><strong>Descrição: </strong></span>
+                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <button>Salvar Alterações</button>
+                            </DisplayFlexInputs>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
+                            </div>
+                            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                        </ModalContentInputs>
+                    </div> :
+                    filter === 'Convidado' ?
+                        <div>
+                            <TitleModal>{event?.name}</TitleModal>
+                            <ModalContentInputs >
+                                <DisplayFlexInputs>
+                                    <DivFrase>
+                                        <span><strong>{cvt?.name}</strong> deseja entrar na equipe <strong>{event?.name}</strong>. Aceitar?</span>
+                                    </DivFrase>
+                                </DisplayFlexInputs>
+                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                    <ModalButton onClick={sendInvitation}>Enviar Convite</ModalButton>
+                                    <ModalButton onClick={rejectedInvitation}>Recusar</ModalButton>
+                                </div>
+                                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                            </ModalContentInputs>
+                        </div> : <></>}
+            </>
         </Modal>
     )
 
@@ -242,7 +243,7 @@ export const MinhasEquipes = () => {
                                 </DisplayFlex>
                                 {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                <ValueFiltro>Administrador</ValueFiltro>    
+                                <ValueFiltro>Administrador</ValueFiltro>
                             </Evento>
                         </div>
                     ) : filter === 'Participando' ?
@@ -259,7 +260,7 @@ export const MinhasEquipes = () => {
                                     </DisplayFlex>
                                     {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                     <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                    <ValueFiltro>Participando</ValueFiltro> 
+                                    <ValueFiltro>Participando</ValueFiltro>
                                 </Evento>
                             </div>
                         ) : filter === 'Convidado' ?
@@ -268,16 +269,17 @@ export const MinhasEquipes = () => {
                                 <div key={key}>
                                     <Evento onClick={() => {
                                         setOpenModal(true)
-                                        setEvent(convite)
+                                        setCvt(convite)
                                     }
                                     }>
                                         <DisplayFlex>
-                                            <NomeEvento>{convite}</NomeEvento>
-                                           
+                                            <NomeEvento>{event?.name}</NomeEvento>
+                                            <NomeEvento><strong>{convite.name}</strong></NomeEvento>
+
                                         </DisplayFlex>
                                         {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
-                                        <DescricaoEvento>{convite}</DescricaoEvento>
-                                        <ValueFiltro>Convidado</ValueFiltro>    
+                                        <DescricaoEvento>{convite.email}</DescricaoEvento>
+                                        <ValueFiltro>Convidado</ValueFiltro>
                                     </Evento>
                                 </div>
                             ) : ''
