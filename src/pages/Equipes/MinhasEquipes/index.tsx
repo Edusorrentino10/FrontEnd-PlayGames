@@ -53,13 +53,13 @@ type EventsProps = {
 }
 
 type ConviteProps = {
-    avatar?: string,
-    createdAt?: string,
-    email?: string,
-    id?: string,
-    name?: string,
-    password?: string,
-    updatedAt?: string,
+    id: string,
+    avatar: string,
+    createdAt: string,
+    email: string,
+    name: string,
+    password: string,
+    updatedAt: string,
 }
 
 export const MinhasEquipes = () => {
@@ -71,6 +71,7 @@ export const MinhasEquipes = () => {
     const [teamsParticipante, setTeamsParticipante] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
     const [invitations, setInvitations] = useState<ConviteProps[]>([]); // bota os convitres num estado
+    const [inviteWithTeamId, setInviteWithTeamId] = useState<any>();
 
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('Administrador')
@@ -95,12 +96,12 @@ export const MinhasEquipes = () => {
             setTeamsAdm(response.data);
 
             const pegarConvites = async () => {
-                let convites = [];
+                let convites: any = [];
                 for (let i = 0; i < response.data.length; i++) {
-                    convites = response.data[i].invitations;
+                    convites = response.data[i];
                 }
-                setInvitations(convites)
-                console.log(invitations)
+                setInvitations(convites.invitations)
+                setInviteWithTeamId(convites);
                 console.log('aa')
             }
             pegarConvites()
@@ -126,35 +127,44 @@ export const MinhasEquipes = () => {
 
     const handleDelete = async (e: FormEvent) => {
         e.preventDefault();
-        const response = await api.delete(`/events/${event?.id}`);
+        const response = await api.delete(`/rotadeexcluir/${event?.id}`);
         setAttInfos(!attInfos);
         setOpenModal(false);
     };
 
-    const sendInvitation = async (e: any) => {
+    const sendInvitation = async (event: any, e: any) => {
         e.preventDefault();
+        console.log(cvt)
         try {
-            const response = await api.post('/users/teamInvitation', {
-                teamId: event?.id,
-                userId: auth.user.id,
-                invitation: "accepted"
-            });
+            if (cvt) {
+                const response = await api.post('/users/teamInvitation', {
+                    teamId: inviteWithTeamId.id,
+                    userId: cvt.id,
+                    invitation: "accepted"
+                });
+            }
             toast.success("Convite aceito!")
             setOpenModal(false)
-        } catch(error){
+
+        } catch (error) {
             console.log(error)
         }
     }
-    const rejectedInvitation = async (e: any) => {
+    const rejectedInvitation = async (event: any, e: any) => {
         e.preventDefault();
-        const response = await api.post('/users/teamInvitation', {
-            teamId: event?.id,
-            userId: auth.user.id,
-            invitation: "rejected"
-        });
-
-        toast.warn("Convite rejeitado!")
-        setOpenModal(false)
+        try {
+            if (cvt) {
+                const response = await api.post('/users/teamInvitation', {
+                    teamId: inviteWithTeamId.id,
+                    userId: cvt.id,
+                    invitation: "rejected"
+                });
+            }
+            toast.warn("Convite rejeitado!")
+            setOpenModal(false)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const ModalTeams = () => (
@@ -193,12 +203,12 @@ export const MinhasEquipes = () => {
                             <ModalContentInputs >
                                 <DisplayFlexInputs>
                                     <DivFrase>
-                                        <span><strong>{cvt?.name}</strong> deseja entrar na equipe <strong>{event?.name}</strong>. Aceitar?</span>
+                                        <span><strong>{cvt?.name}</strong> deseja entrar na equipe <strong>{inviteWithTeamId.name}</strong>. Aceitar?</span>
                                     </DivFrase>
                                 </DisplayFlexInputs>
                                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                    <ModalButton onClick={sendInvitation}>Enviar Convite</ModalButton>
-                                    <ModalButton onClick={rejectedInvitation}>Recusar</ModalButton>
+                                    <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Convite</ModalButton>
+                                    <ModalButton onClick={(e) => rejectedInvitation(cvt, e)}>Recusar</ModalButton>
                                 </div>
                                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
                             </ModalContentInputs>
@@ -265,7 +275,7 @@ export const MinhasEquipes = () => {
                             </div>
                         ) : filter === 'Convidado' ?
                             // filtrar com o atributo que verifica se o user foi convidado e pegar os convites
-                            invitations?.map((convite, key) =>
+                            invitations.map((convite, key) =>
                                 <div key={key}>
                                     <Evento onClick={() => {
                                         setOpenModal(true)
@@ -273,7 +283,7 @@ export const MinhasEquipes = () => {
                                     }
                                     }>
                                         <DisplayFlex>
-                                            <NomeEvento>{event?.name}</NomeEvento>
+                                            <NomeEvento>{inviteWithTeamId.name}</NomeEvento>
                                             <NomeEvento><strong>{convite.name}</strong></NomeEvento>
 
                                         </DisplayFlex>
