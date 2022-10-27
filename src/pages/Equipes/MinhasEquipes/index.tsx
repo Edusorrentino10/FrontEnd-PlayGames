@@ -111,9 +111,8 @@ export const MinhasEquipes = () => {
 
 
         const getTeamsParticipante = async () => {
-            const response = await api.get(`/teams/findMyTeamsImIn/${auth.user.id}`);
+            const response = await api.get(`/teams/findTeamsImIn/${auth.user.id}`);
             setTeamsParticipante(response.data);
-            console.log(response.data)
         }
         getTeamsParticipante();
 
