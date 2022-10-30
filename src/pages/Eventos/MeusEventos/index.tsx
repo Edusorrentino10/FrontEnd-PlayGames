@@ -56,7 +56,7 @@ export const MeusEventos = () => {
     const navigate = useNavigate();
 
     const [event, setEvent] = useState<EventsProps>();
-    const [events, setEvents] = useState<EventsProps[]>([]);
+    const [myEvents, setMyEvents] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
 
     const [openModal, setOpenModal] = useState(false);
@@ -78,17 +78,11 @@ export const MeusEventos = () => {
 
     useEffect(() => {
         const getEvents = async () => {
-            const response = await api.get('/events');
-            setEvents(response.data);
+            const response = await api.get(`/events/myEvents/${auth.user.id}`);
+            setMyEvents(response.data);
         }
         getEvents();
-
-        const getSports = async () => {
-            const response = await api.get('/sports');
-            setSports(response.data);
-        }
-        getSports();
-    }, [attInfos])
+    }, [])
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -206,14 +200,14 @@ export const MeusEventos = () => {
                 <Title>Meus Eventos</Title>
                 <select onChange={(e) => setFilter(e.target.value)} name="select">
                     <option defaultChecked value="Administrador">Administrador</option>
-                    <option value="Convidado">Convidado</option>
+                    {/* <option value="Convidado">Convidado</option> // por enquanto nao vai ter essa aba de convidado aqui */}
                     <option value="Participando">Participando</option>
                 </select>
             </Content>
 
             <EventosContent>
                 {filter === 'Administrador' ?
-                    events.map((evento, key) => auth.user.id === evento.createdBy &&
+                    myEvents.map((evento, key) => auth.user.id === evento.createdBy &&
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
@@ -235,7 +229,7 @@ export const MeusEventos = () => {
                         </div>
                     ) : filter === 'Participando' ?
                         // filtrar com o atributo que verifica se o user é participante mas nao é administrador.
-                        events.map((evento, key) => auth.user.id !== evento.createdBy &&
+                        myEvents.map((evento, key) => auth.user.id !== evento.createdBy &&
                             <div key={key}>
                                 <Evento onClick={() => {
                                     setOpenModal(true)
@@ -257,7 +251,7 @@ export const MeusEventos = () => {
                             </div>
                         ) : filter === 'Convidado' ?
                             // filtrar com o atributo que verifica se o user foi convidado e pegar os convites
-                            events.map((evento, key) => auth.user.id !== evento.createdBy &&
+                            myEvents.map((evento, key) => auth.user.id !== evento.createdBy &&
                                 <div key={key}>
                                     <Evento onClick={() => {
                                         setOpenModal(true)

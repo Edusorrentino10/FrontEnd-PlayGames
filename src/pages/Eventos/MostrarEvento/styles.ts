@@ -198,12 +198,93 @@ export const DivEquipes = styled.div`
         }
         button {
             margin-top: 5rem;
-            padding: 1rem 1rem;
+            padding: 7px;
             cursor: pointer;
             font-weight: 500;
+            display: block;
+
+        }
+        select {
+            margin-top: 0.5rem;
+            padding: 5px;
         }
     }
-`; export const ModalContent = styled.div`
+`;
+
+
+export const InscreverCasaButton = styled.button`
+
+`;
+
+export const InscreverVisitanteButton = styled.button`
+
+`;
+
+
+export const SelectCasa = styled.select<{ isActive: boolean }>`
+    display: ${props => props.isActive ? 'flex' : 'none'};
+`;
+
+export const SelectVisitante = styled.select<{ isActive: boolean }>`
+    display: ${props => props.isActive ? 'flex' : 'none'};
+`;
+
+
+
+export const ConfirmarButtonCasa = styled.div<{ isActive: boolean }>`
+  display: ${props => props.isActive ? 'flex' : 'none'};
+
+  margin-top: 0.8rem;
+  padding: 10px 18px;
+  font-size: 18px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #ec9706;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+
+  &:hover {background-color: #e28f05}
+  &:active {
+  background-color: #e28f05;
+  box-shadow: 0 5px #909090;
+  transform: translateY(4px);
+}
+`;
+
+export const ConfirmarButtonVisitante = styled.div<{ isActive: boolean }>`
+  display: ${props => props.isActive ? 'flex' : 'none'};
+
+margin-top: 0.8rem;
+padding: 10px 18px;
+font-size: 18px;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+outline: none;
+color: #fff;
+background-color: #ec9706;
+border: none;
+border-radius: 15px;
+box-shadow: 0 9px #999;
+
+&:hover {background-color: #e28f05}
+&:active {
+background-color: #e28f05;
+box-shadow: 0 5px #909090;
+transform: translateY(4px);
+}
+`;
+
+
+
+
+
+
+export const ModalContent = styled.div`
     position: relative;
 `;
 

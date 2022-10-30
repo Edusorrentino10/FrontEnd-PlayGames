@@ -70,7 +70,7 @@ export const MinhasEquipes = () => {
     const [teamsAdm, setTeamsAdm] = useState<EventsProps[]>([]);
     const [teamsParticipante, setTeamsParticipante] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
-    const [invitations, setInvitations] = useState<ConviteProps[]>([]); // bota os convitres num estado
+    const [invitations, setInvitations] = useState<ConviteProps[]>([]); // bota os convites num estado
     const [inviteWithTeamId, setInviteWithTeamId] = useState<any>();
 
     const [openModal, setOpenModal] = useState(false);
@@ -175,7 +175,7 @@ export const MinhasEquipes = () => {
 
         >
             <>
-                {filter === 'Administrador' || filter === 'Participando' ?
+                {filter === 'Administrador' ?
                     <div>
                         <TitleModal>{event?.name}</TitleModal>
                         <ModalContentInputs>
@@ -196,6 +196,21 @@ export const MinhasEquipes = () => {
                             <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
                         </ModalContentInputs>
                     </div> :
+                    filter === 'Participando' ?
+                    <div>
+                        <TitleModal>{event?.name}</TitleModal>
+                        <ModalContentInputs>
+                            <DisplayFlexInputs>
+                                <br />
+                                <span><strong>Descrição: </strong>{event?.description}</span>
+
+                            </DisplayFlexInputs>
+                            {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
+                            </div> */}
+                            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                        </ModalContentInputs>
+                    </div> :
                     filter === 'Convidado' ?
                         <div>
                             <TitleModal>{event?.name}</TitleModal>
@@ -206,7 +221,7 @@ export const MinhasEquipes = () => {
                                     </DivFrase>
                                 </DisplayFlexInputs>
                                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                    <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Convite</ModalButton>
+                                    <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Solicitação</ModalButton>
                                     <ModalButton onClick={(e) => rejectedInvitation(cvt, e)}>Recusar</ModalButton>
                                 </div>
                                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
@@ -233,7 +248,7 @@ export const MinhasEquipes = () => {
                 <Title>Minhas Equipes</Title>
                 <select onChange={(e) => setFilter(e.target.value)} name="select">
                     <option defaultChecked value="Administrador">Administrador</option>
-                    <option value="Convidado">Convidado</option>
+                    <option value="Convidado">Solicitações</option>
                     <option value="Participando">Participando</option>
                 </select>
             </Content>
