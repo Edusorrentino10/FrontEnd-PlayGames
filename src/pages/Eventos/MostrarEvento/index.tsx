@@ -62,7 +62,8 @@ export const MostrarEvento = () => {
     const [events, setEvents] = useState<EventsProps[]>([]);
     const [sports, setSports] = useState<SportsProps[]>([]);
     const [openModal, setOpenModal] = useState(false);
-    const [filter, setFilter] = useState('')
+    const [filterCategoria, setFilterCategoria] = useState('');
+    const [filterEvento, setFilterEvento] = useState('');
 
     const [casaActive, setCasaActive] = useState(false);
     const [visitanteActive, setVisitanteActive] = useState(false);
@@ -185,16 +186,20 @@ export const MostrarEvento = () => {
             <Content>
                 <Title>Eventos</Title>
                 <CriarEventoButton onClick={() => navigate('/criar-evento')} type="submit" value="Criar Evento" />
-                <select onChange={(e) => setFilter(e.target.value)} name="select">
-                    <option defaultChecked value={''}>Todos</option>
+                <DisplayFlex style={{borderBottom: 'none'}}>
+                    <select onChange={(e) => setFilterCategoria(e.target.value)} name="select">
+                        <option defaultChecked value={''}>Todos</option>
 
-                    {sports.map((item) =>
-                        <option value={item.name}>{item.name}</option>
-                    )}
-                </select>
+                        {sports.map((item) =>
+                            <option value={item.name}>{item.name}</option>
+                        )}
+                    </select>
+                    <input type="text" placeholder="Digite o nome do evento" onChange={(e) => setFilterEvento(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>
+                </DisplayFlex>
+                
             </Content>
             <EventosContent>
-                {filter === '' ?
+                {filterEvento === '' && filterCategoria === '' ?
                     events.map((evento, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
@@ -215,7 +220,8 @@ export const MostrarEvento = () => {
                             </Evento>
                         </div>
                     ) :
-                    events.map((evento, key) => evento.Sport?.name === filter &&
+                    events.map((evento, key) => (evento.Sport?.name === filterCategoria
+                            || evento.name.toLowerCase().startsWith(filterEvento.toLowerCase())) &&
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)

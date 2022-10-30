@@ -177,17 +177,17 @@ export const MinhasEquipes = () => {
             <>
                 {filter === 'Administrador' ?
                     <div>
-                        <TitleModal>{event?.name}</TitleModal>
+                        <TitleModal>Editar equipe</TitleModal>
                         <ModalContentInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                                <Nome placeholder="Nome" type="text" value={event?.name} onChange={(e) => setPutName(e.target.value)} required/>
                             </DisplayFlexInputs>
 
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <Descricao value={event?.description} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
