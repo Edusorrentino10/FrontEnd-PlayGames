@@ -194,12 +194,12 @@ export const MostrarEvento = () => {
                             <option value={item.name}>{item.name}</option>
                         )}
                     </select>
-                    <input type="text" placeholder="Digite o nome do evento" onChange={(e) => setFilterEvento(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>
+                    {/*<input type="text" placeholder="Digite o nome do evento" onChange={(e) => setFilterEvento(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>*/}
                 </DisplayFlex>
                 
             </Content>
             <EventosContent>
-                {filterEvento === '' && filterCategoria === '' ?
+                {filterCategoria === '' ?
                     events.map((evento, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
@@ -220,8 +220,7 @@ export const MostrarEvento = () => {
                             </Evento>
                         </div>
                     ) :
-                    events.map((evento, key) => (evento.Sport?.name === filterCategoria
-                            || evento.name.toLowerCase().startsWith(filterEvento.toLowerCase())) &&
+                    events.map((evento, key) => evento.Sport?.name === filterCategoria &&
                         <div key={key}>
                             <Evento onClick={() => {
                                 setOpenModal(true)
