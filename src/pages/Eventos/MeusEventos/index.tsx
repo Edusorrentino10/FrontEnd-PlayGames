@@ -144,6 +144,7 @@ export const MeusEventos = () => {
         setOpenModal(false);
     };
 
+    
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
