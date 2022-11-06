@@ -100,6 +100,7 @@ export const MinhasEquipes = () => {
                 for (let i = 0; i < response.data.length; i++) {
                     convites = response.data[i];
                 }
+                console.log(convites.invitations)
                 setInvitations(convites.invitations)
                 setInviteWithTeamId(convites);
                 console.log('aa')
@@ -144,7 +145,10 @@ export const MinhasEquipes = () => {
             }
             toast.success("Convite aceito!")
             setOpenModal(false)
-
+            setInvitations(invitations.filter(x => x.id != cvt?.id))
+            window.open(`mailto:${cvt?.email}
+            ?subject=Play Games - Solicitação aceita
+            &body=A equipe ${inviteWithTeamId.name} aceitou sua solicitação!\n`)
         } catch (error) {
             console.log(error)
         }
