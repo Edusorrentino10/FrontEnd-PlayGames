@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
 import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro, DivFrase } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
@@ -49,7 +50,10 @@ type EventsProps = {
     Sport: {
         id: string,
         name: string,
-    }
+    },
+    teams: any,
+    users: any
+
 }
 
 type ConviteProps = {
@@ -85,6 +89,10 @@ export const MinhasEquipes = () => {
     const [putLocation, setPutLocation] = useState('');
     const [putSportId, setPutSportId] = useState(event?.Sport?.id);
     const [attInfos, setAttInfos] = useState(false);
+
+
+    const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>();
+    const [jogadoresDoTimeB, setJogadoresDoTimeB] = useState<any>();
 
 
     const [alterarModal, setAlterarModal] = useState(false);
@@ -148,7 +156,7 @@ export const MinhasEquipes = () => {
             }
             toast.success("Convite aceito!")
             setOpenModal(false)
-            setInvitations(invitations.filter(x => x.id != cvt?.id))
+            setInvitations(invitations.filter(x => x.id !== cvt?.id))
             window.open(`mailto:${cvt?.email}
             ?subject=Play Games - Solicitação aceita
             &body=A equipe ${inviteWithTeamId.name} aceitou sua solicitação!\n`)
@@ -173,6 +181,74 @@ export const MinhasEquipes = () => {
         }
     }
 
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (event !== undefined) {
+
+            if (putName === '') {
+                toast.error("Nome inválida!");
+                return false;
+            }
+            if (putDescription === '') {
+                toast.error("Descrição inválida!");
+                return false;
+            }
+            const response = await api.put(`/teams/${event?.id}`, {
+                name: putName,
+                description: putDescription
+            })
+            toast.success('Alterações salvas!');
+            setAttInfos(!attInfos);
+            setOpenModal(false);
+
+        }
+    }
+
+
+
+    useEffect(() => {
+
+        playersTeamA();
+        playersTeamB();
+
+    }, [event])
+
+
+    const playersTeamA = () => {
+        let playersA: any[] = [];
+        event ?
+            event?.users?.forEach((user: any) => (
+                playersA.push(' 👤 ' + user.name + ' 📩 ' + user.email)
+            )) : []
+        if (playersA.length > 0) {
+            setJogadoresDoTimeA(playersA)
+        } else {
+            setJogadoresDoTimeA('');
+        }
+        console.log(event)
+    }
+
+    const playersTeamB = () => {
+        let playersB: any[] = [];
+        event ?
+            event?.users?.forEach((user: any) => (
+                playersB.push(' 👤 ' + user.name + ' ' + ' 📩 ' + ' ' + user.email)
+            )) : []
+        if (playersB.length > 0) {
+            setJogadoresDoTimeB(playersB)
+        } else {
+            setJogadoresDoTimeB('');
+        }
+        console.log(event)
+    }
+
+
+
+
+
+
+
+
     const ModalTeams = () => (
         <Modal
             isOpen={openModal}
@@ -188,35 +264,44 @@ export const MinhasEquipes = () => {
                         <ModalContentInputs>
                             <DisplayFlexInputs>
                                 <br />
+                                <span><strong>Integrantes: </strong></span>
+                                {
+                                    jogadoresDoTimeA ?
+                                        jogadoresDoTimeA.map((player: any, key: any) => (
+                                            <p>{player}</p>
+                                        )) : ''
+                                }
+                                <br />
                                 <span><strong>Descrição: </strong>{event?.description}</span>
+
 
                             </DisplayFlexInputs>
                             {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
                             </div> */}
-                            
+
                             <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
                     </div> :
                     <div>
                         <TitleModal>Editar equipe</TitleModal>
-                        <ModalContentInputs>
+                        <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder="Nome" type="text" value={event?.name} onChange={(e) => setPutName(e.target.value)} required />
+                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
                             </DisplayFlexInputs>
 
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={event?.description} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
                             </div> */}
-                            
+
                             <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
                         </ModalContentInputs>

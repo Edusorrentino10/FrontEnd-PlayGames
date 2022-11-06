@@ -127,19 +127,23 @@ export const MostrarEvento = () => {
     };
 
     const inscreverEquipeVisitante = async () => {
-
-        //Isso é só uma ideia
-        // if(evento.teams[0] && evento.teams[1]){
-        //     return toast.error('Evento lotado!')
-        // }
-
-        if (teamVisitante === '') {
-            return toast.error('Time não escolhido!');
+        if (event) {
+            if (event.teams[0] && event.teams[1]) {
+                return toast.error('Evento lotado!')
+            }
         }
-
-        const response = await api.post(`/events/addTeam`,
-            // botar os dados para enviar pra rota de addTeam.
-        );
+        if (teamVisitante === '') {
+            setTeamCasa(teamsAdm[0].id)
+        }
+        if (event) {
+            const response = await api.post(`/events/addTeam`,
+                {
+                    eventId: event.id,
+                    teamId: teamVisitante
+                }
+            );
+        }
+        toast.success("Time adicionado!")
     };
 
 
@@ -154,8 +158,8 @@ export const MostrarEvento = () => {
     const playersTeamA = () => {
         let playersA: any[] = [];
         event?.teams[0]?.users ?
-            event?.teams[0]?.users?.forEach((number: any) => (
-                playersA.push(' 👤 ' + number.name + ' 📩 ' + number.email)
+            event?.teams[0]?.users?.forEach((user: any) => (
+                playersA.push(' 👤 ' + user.name + ' 📩 ' + user.email)
             )) : []
         if (playersA.length > 0) {
             setJogadoresDoTimeA(playersA)
@@ -167,8 +171,8 @@ export const MostrarEvento = () => {
     const playersTeamB = () => {
         let playersB: any[] = [];
         event?.teams[1]?.users ?
-            event?.teams[1]?.users?.forEach((number: any) => (
-                playersB.push(' 👤 ' + number.name + ' ' + ' 📩 ' + ' ' + number.email)
+            event?.teams[1]?.users?.forEach((user: any) => (
+                playersB.push(' 👤 ' + user.name + ' ' + ' 📩 ' + ' ' + user.email)
             )) : []
         if (playersB.length > 0) {
             setJogadoresDoTimeB(playersB)

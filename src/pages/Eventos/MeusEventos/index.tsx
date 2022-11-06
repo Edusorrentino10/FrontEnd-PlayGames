@@ -127,11 +127,12 @@ export const MeusEventos = () => {
                     description: putDescription,
                     sportId: putSportId,
                 });
+                toast.success('Alterações salvas!');
                 setAttInfos(!attInfos);
                 setOpenModal(false);
             }
             else {
-                toast.error('Escolha um data.')
+                toast.error('Escolha uma data.')
                 return false;
             }
         }
