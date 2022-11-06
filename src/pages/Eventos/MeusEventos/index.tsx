@@ -50,6 +50,7 @@ type EventsProps = {
         id: string,
         name: string,
     }
+    teams: any,
 }
 
 export const MeusEventos = () => {
@@ -85,28 +86,29 @@ export const MeusEventos = () => {
             setMyEvents(response.data);
         }
         getEvents();
-    }, [])
+    }, [attInfos])
 
     const handleSubmit = async (e: FormEvent) => {
+        console.log(event);
         e.preventDefault();
+        if(putLocation === '' && putName === '' && putTime === '' && putDay === '' && putDescription === '') {
+            return toast.error('Nenhuma modificação foi feita.');
+        }
         if (event !== undefined) {
             if (putTeamsLimit && parseInt(putTeamsLimit) < 1) {
                 toast.error('Número de vagas inválido');
                 return false;
             }
-            if (putTime === '') {
-                toast.error('Escolha um horário.');
-                return false;
-            }
             if (putLocation === '') {
-                toast.error('Escolha um local.');
-                return false;
+                setPutLocation(event?.location);
             }
             if (putDescription === '') {
-                toast.error('Insira uma descrição.');
-                return false;
+                setPutDescription(event?.description);
             }
-            if (putDay !== undefined) {
+            if (putName === '') {
+                setPutName(event?.name);
+            }
+            if (putDay !== '') {
                 let partesData = putDay.split("-");
                 let dataFormatada = new Date(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2]));
                 if (parseInt(partesData[0]) > 2023) {
@@ -117,24 +119,26 @@ export const MeusEventos = () => {
                     toast.error('Insira uma data possível.');
                     return false;
                 }
-                console.log([{ putName, putDay, putTime, putLocation, putTeamsLimit, putDescription, putSportId }])
-                const response = await api.put(`/events/${event?.id}`, {
-                    name: putName,
-                    day: putDay,
-                    time: putTime,
-                    location: putLocation,
-                    teamsLimit: putTeamsLimit ? parseInt(putTeamsLimit) : 0,
-                    description: putDescription,
-                    sportId: putSportId,
-                });
-                toast.success('Alterações salvas!');
-                setAttInfos(!attInfos);
-                setOpenModal(false);
             }
-            else {
-                toast.error('Escolha uma data.')
-                return false;
-            }
+
+            console.log([{ putName, putDay, putTime, putLocation, putTeamsLimit, putDescription, putSportId }])
+            const response = await api.put(`/events/${event?.id}`, {
+                name: putName,
+                day: putDay !== '' ? putDay : event?.day,
+                time: putTime !== '' ? putTime : event?.time,
+                location: putLocation,
+                teamsLimit: putTeamsLimit ? parseInt(putTeamsLimit) : 0,
+                description: putDescription,
+                sportId: putSportId,
+            });
+            toast.success('Alterações salvas!');
+            setAttInfos(!attInfos);
+            setOpenModal(false);
+            setPutDescription('');
+            setPutLocation('');
+            setPutName('');
+            setPutDay('');
+            setPutTime('');
         }
     }
 
@@ -145,7 +149,7 @@ export const MeusEventos = () => {
         setOpenModal(false);
     };
 
-    
+
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
@@ -161,7 +165,16 @@ export const MeusEventos = () => {
                             <p><strong>Hora: </strong>{event?.time}h</p>
                             <p><strong>Local: </strong>{event?.location}</p>
                             <p><strong>Descrição: </strong>{event?.description}</p>
-                            <ModalButton onClick={() => {setOpenModal(false); setAlterarModal(false)}}>Fechar</ModalButton>
+                            {/* <p><strong>Equipe A: </strong> {event?.}</p> */}
+                            <ModalButton onClick={() => {
+                                setOpenModal(false);
+                                setAlterarModal(false);
+                                setPutDescription('');
+                                setPutLocation('');
+                                setPutName('');
+                                setPutDay('');
+                                setPutTime('');
+                            }}>Fechar</ModalButton>
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
                     </div>
@@ -170,16 +183,16 @@ export const MeusEventos = () => {
                         <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Data/Hora: </strong></span>
-                                <Data value={putDay} onChange={(e) => setPutDay(e.target.value)} type="date" required />
-                                <Hora value={putTime} onChange={(e) => setPutTime(e.target.value)} type="time" required />
+                                <Data value={putDay} onChange={(e) => { setPutDay(e.target.value); }} type="date" />
+                                <Hora value={putTime} onChange={(e) => { setPutTime(e.target.value); }} type="time" />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Local: </strong></span>
-                                <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} required />
+                                <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} />
                             </DisplayFlexInputs>
                             {/* <DisplayFlexInputs>
          <span><strong>Vagas: </strong></span>
@@ -188,15 +201,23 @@ export const MeusEventos = () => {
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
                             </div>
-                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false)}}>Fechar</ModalButton>
+                            <ModalButton onClick={() => {
+                                setOpenModal(false);
+                                setAlterarModal(false);
+                                setPutDescription('');
+                                setPutLocation('');
+                                setPutName('');
+                                setPutDay('');
+                                setPutTime('');
+                            }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
-                            
+
                         </ModalContentInputs>
                     </div>
                     : ''

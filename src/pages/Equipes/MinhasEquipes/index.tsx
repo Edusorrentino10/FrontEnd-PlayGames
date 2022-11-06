@@ -92,7 +92,6 @@ export const MinhasEquipes = () => {
 
 
     const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>();
-    const [jogadoresDoTimeB, setJogadoresDoTimeB] = useState<any>();
 
 
     const [alterarModal, setAlterarModal] = useState(false);
@@ -185,21 +184,17 @@ export const MinhasEquipes = () => {
         e.preventDefault();
         if (event !== undefined) {
 
-            if (putName === '') {
-                toast.error("Nome inválida!");
-                return false;
-            }
-            if (putDescription === '') {
-                toast.error("Descrição inválida!");
-                return false;
-            }
+
             const response = await api.put(`/teams/${event?.id}`, {
-                name: putName,
-                description: putDescription
+                name: putName !== '' ? putName : event?.name,
+                description: putDescription !== '' ? putDescription : event?.description
             })
             toast.success('Alterações salvas!');
             setAttInfos(!attInfos);
             setOpenModal(false);
+            setAlterarModal(false)
+            setPutName('');
+            setPutDescription('');
 
         }
     }
@@ -209,7 +204,6 @@ export const MinhasEquipes = () => {
     useEffect(() => {
 
         playersTeamA();
-        playersTeamB();
 
     }, [event])
 
@@ -227,21 +221,6 @@ export const MinhasEquipes = () => {
         }
         console.log(event)
     }
-
-    const playersTeamB = () => {
-        let playersB: any[] = [];
-        event ?
-            event?.users?.forEach((user: any) => (
-                playersB.push(' 👤 ' + user.name + ' ' + ' 📩 ' + ' ' + user.email)
-            )) : []
-        if (playersB.length > 0) {
-            setJogadoresDoTimeB(playersB)
-        } else {
-            setJogadoresDoTimeB('');
-        }
-        console.log(event)
-    }
-
 
 
 
@@ -280,7 +259,12 @@ export const MinhasEquipes = () => {
                                 <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
                             </div> */}
 
-                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
+                            <ModalButton onClick={() => {
+                                setOpenModal(false);
+                                setAlterarModal(false);
+                                setPutName('');
+                                setPutDescription('');
+                            }}>Fechar</ModalButton>
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
                     </div> :
@@ -289,20 +273,25 @@ export const MinhasEquipes = () => {
                         <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} />
                             </DisplayFlexInputs>
 
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
                             </div> */}
 
-                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
+                            <ModalButton onClick={() => {
+                                setOpenModal(false);
+                                setAlterarModal(false);
+                                setPutName('');
+                                setPutDescription('');
+                            }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
                         </ModalContentInputs>
                     </div> :
@@ -312,6 +301,14 @@ export const MinhasEquipes = () => {
                             <ModalContentInputs>
                                 <DisplayFlexInputs>
                                     <br />
+                                    <span><strong>Integrantes: </strong></span>
+                                {
+                                    jogadoresDoTimeA ?
+                                        jogadoresDoTimeA.map((player: any, key: any) => (
+                                            <p>{player}</p>
+                                        )) : ''
+                                }
+                                <br />
                                     <span><strong>Descrição: </strong>{event?.description}</span>
 
                                 </DisplayFlexInputs>

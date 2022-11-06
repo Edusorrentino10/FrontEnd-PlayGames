@@ -67,6 +67,8 @@ export const MostrarEvento = () => {
     const [openModal, setOpenModal] = useState(false);
     const [filterCategoria, setFilterCategoria] = useState('');
     const [filterEvento, setFilterEvento] = useState('');
+    const [attInfos, setAttInfos] = useState(false);
+
 
     const [casaActive, setCasaActive] = useState(false);
     const [visitanteActive, setVisitanteActive] = useState(false);
@@ -99,7 +101,7 @@ export const MostrarEvento = () => {
         getSports();
 
 
-    }, [])
+    }, [attInfos])
 
     const inscreverEquipeCasa = async () => {
 
@@ -108,22 +110,19 @@ export const MostrarEvento = () => {
                 return toast.error('Evento lotado!')
             }
         }
-        console.log(event?.teams)
+        console.log(event)
 
         console.log(teamCasa)
         console.log('aaaaa')
         if (teamCasa === '') {
             setTeamCasa(teamsAdm[0].id)
         }
-        if (event) {
-            const response = await api.post(`/events/addTeam`,
-                {
-                    eventId: event.id,
-                    teamId: teamCasa
-                }
-            );
-        }
-        toast.success("Time adicionado!")
+        if (event && teamCasa) {
+            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamCasa}`);
+            setAttInfos(!attInfos)
+            toast.success("Time adicionado!")
+            setOpenModal(false);
+        };
     };
 
     const inscreverEquipeVisitante = async () => {
@@ -132,18 +131,20 @@ export const MostrarEvento = () => {
                 return toast.error('Evento lotado!')
             }
         }
+
         if (teamVisitante === '') {
-            setTeamCasa(teamsAdm[0].id)
+            setTeamVisitante(teamsAdm[0].id)
         }
-        if (event) {
-            const response = await api.post(`/events/addTeam`,
-                {
-                    eventId: event.id,
-                    teamId: teamVisitante
-                }
-            );
-        }
-        toast.success("Time adicionado!")
+        console.log(event)
+
+        console.log(teamVisitante)
+        console.log('aaaaa')
+        if (event && teamVisitante) {
+            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`);
+            setAttInfos(!attInfos)
+            toast.success("Time adicionado!")
+            setOpenModal(false);
+        }; 
     };
 
 
