@@ -43,7 +43,6 @@ export const Perfil = () => {
                 <AlterarInformacoes onClick={() => navigate('/configuracoes')}>Alterar Informações</AlterarInformacoes>
                 {/* <AlterarSenha>Alterar Senha</AlterarSenha>
             <ExcluirPerfil>Excluir Perfil</ExcluirPerfil> */}
-                <GerenciarEventos onClick={() => navigate('/gerenciar-eventos')}>Gerenciar Eventos</GerenciarEventos>
             </SegundoContent>
         </Container>
     )

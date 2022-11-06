@@ -73,6 +73,9 @@ export const MeusEventos = () => {
     const [attInfos, setAttInfos] = useState(false);
 
 
+    const [alterarModal, setAlterarModal] = useState(false);
+
+
     const auth = useContext(AuthContext);
 
 
@@ -147,39 +150,56 @@ export const MeusEventos = () => {
             style={customStylesModal}
             contentLabel="Example Modal"
             ariaHideApp={false}
-        >
-            <div>
-                <TitleModal>{event?.name}</TitleModal>
-                <ModalContentInputs onSubmit={handleSubmit}>
-                    <DisplayFlexInputs>
-                        <span><strong>Nome: </strong></span>
-                        <Nome placeholder="Nome" type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Data/Hora: </strong></span>
-                        <Data value={putDay} onChange={(e) => setPutDay(e.target.value)} type="date" required />
-                        <Hora value={putTime} onChange={(e) => setPutTime(e.target.value)} type="time" required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Local: </strong></span>
-                        <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <span><strong>Vagas: </strong></span>
-                        <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
-                    </DisplayFlexInputs>
-                    <DisplayFlexInputs>
-                        <br />
-                        <span><strong>Descrição: </strong></span>
-                        <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
-                        <button>Salvar Alterações</button>
-                    </DisplayFlexInputs>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
+        ><>
+                {filter === 'Administrador' ? !alterarModal ?
+                    <div>
+                        <TitleModal>{event?.name}</TitleModal>
+                        <ModalContentInputs>
+                            <p><strong>Data: </strong>{event?.day}</p>
+                            <p><strong>Hora: </strong>{event?.time}h</p>
+                            <p><strong>Local: </strong>{event?.location}</p>
+                            <p><strong>Descrição: </strong>{event?.description}</p>
+                            <ModalButton onClick={() => {setOpenModal(false); setAlterarModal(false)}}>Fechar</ModalButton>
+                            <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
+                        </ModalContentInputs>
                     </div>
-                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
-                </ModalContentInputs>
-            </div>
+                    : <div>
+                        <TitleModal>{event?.name}</TitleModal>
+                        <ModalContentInputs onSubmit={handleSubmit}>
+                            <DisplayFlexInputs>
+                                <span><strong>Nome: </strong></span>
+                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} required />
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Data/Hora: </strong></span>
+                                <Data value={putDay} onChange={(e) => setPutDay(e.target.value)} type="date" required />
+                                <Hora value={putTime} onChange={(e) => setPutTime(e.target.value)} type="time" required />
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Local: </strong></span>
+                                <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} required />
+                            </DisplayFlexInputs>
+                            {/* <DisplayFlexInputs>
+         <span><strong>Vagas: </strong></span>
+         <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
+     </DisplayFlexInputs> */}
+                            <DisplayFlexInputs>
+                                <br />
+                                <span><strong>Descrição: </strong></span>
+                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <button>Salvar Alterações</button>
+                            </DisplayFlexInputs>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ExcluirEvento onClick={handleDelete}>Excluir Evento</ExcluirEvento>
+                            </div>
+                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false)}}>Fechar</ModalButton>
+                            <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
+                            
+                        </ModalContentInputs>
+                    </div>
+                    : ''
+                }
+            </>
         </Modal>
     )
 
@@ -224,7 +244,7 @@ export const MeusEventos = () => {
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                <ValueFiltro>Administrador</ValueFiltro>    
+                                <ValueFiltro>Administrador</ValueFiltro>
                             </Evento>
                         </div>
                     ) : filter === 'Participando' ?
@@ -246,7 +266,7 @@ export const MeusEventos = () => {
                                     </ModalidadeEvento>
                                     <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                     <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                    <ValueFiltro>Participando</ValueFiltro> 
+                                    <ValueFiltro>Participando</ValueFiltro>
                                 </Evento>
                             </div>
                         ) : filter === 'Convidado' ?
@@ -268,7 +288,7 @@ export const MeusEventos = () => {
                                         </ModalidadeEvento>
                                         <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                         <DescricaoEvento>{evento.description}</DescricaoEvento>
-                                        <ValueFiltro>Convidado</ValueFiltro>    
+                                        <ValueFiltro>Convidado</ValueFiltro>
                                     </Evento>
                                 </div>
                             ) : ''

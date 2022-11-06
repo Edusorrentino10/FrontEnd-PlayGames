@@ -59,7 +59,8 @@ type TeamsProps = {
     updatedAt: string,
     users: [{
         id: string,
-        name: string
+        name: string,
+        email: string,
     }]
 }
 
@@ -77,7 +78,7 @@ export const MostrarEquipes = () => {
 
         const getTeams = async () => {
             const response = await api.get('/teams');
-            console.log(response)
+            console.log(response.data)
             setTeams(response.data);
         }
         getTeams();
@@ -117,13 +118,13 @@ export const MostrarEquipes = () => {
                     </legend>
                     { <div>
                         {team?.users.map((jogador, key) =>
-                            <p key={key}>{jogador.name}</p>
+                            <p key={key}>{' 👤 ' + jogador.name + ' 📩 ' + jogador.email}</p>
                         )}
                     </div> }
                 </fieldset>
             </DivEquipes>
             <div style={{display: 'flex', justifyContent: 'space-around'}}>
-                <ModalButton onClick={() => sendInvitation()}>Enviar Convite</ModalButton>
+                <ModalButton onClick={() => sendInvitation()}>Enviar Solicitação</ModalButton>
                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
             </div>
         </Modal>

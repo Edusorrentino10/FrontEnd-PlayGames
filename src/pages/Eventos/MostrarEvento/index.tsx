@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
 import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
@@ -49,7 +50,9 @@ type EventsProps = {
     Sport: {
         id: string,
         name: string,
-    }
+    },
+    teams: any,
+    users: any
 }
 
 export const MostrarEvento = () => {
@@ -71,6 +74,10 @@ export const MostrarEvento = () => {
     const [teamCasa, setTeamCasa] = useState('');
     const [teamVisitante, setTeamVisitante] = useState('');
 
+    const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>();
+    const [jogadoresDoTimeB, setJogadoresDoTimeB] = useState<any>();
+
+
     useEffect(() => {
 
         const getEvents = async () => {
@@ -91,22 +98,32 @@ export const MostrarEvento = () => {
         }
         getSports();
 
+
     }, [])
 
     const inscreverEquipeCasa = async () => {
 
-        //Isso é só uma ideia
-        // if(evento.teams[0] && evento.teams[1]){
-        //     return toast.error('Evento lotado!')
-        // }
-
-        if (teamCasa === '') {
-            return toast.error('Time não escolhido!');
+        if (event) {
+            if (event.teams[0] && event.teams[1]) {
+                return toast.error('Evento lotado!')
+            }
         }
+        console.log(event?.teams)
 
-        const response = await api.post(`/events/addTeam`,
-            // botar os dados para enviar pra rota de addTeam.
-        );
+        console.log(teamCasa)
+        console.log('aaaaa')
+        if (teamCasa === '') {
+            setTeamCasa(teamsAdm[0].id)
+        }
+        if (event) {
+            const response = await api.post(`/events/addTeam`,
+                {
+                    eventId: event.id,
+                    teamId: teamCasa
+                }
+            );
+        }
+        toast.success("Time adicionado!")
     };
 
     const inscreverEquipeVisitante = async () => {
@@ -125,11 +142,48 @@ export const MostrarEvento = () => {
         );
     };
 
+
+    useEffect(() => {
+
+        playersTeamA();
+        playersTeamB();
+
+    }, [event])
+
+
+    const playersTeamA = () => {
+        let playersA: any[] = [];
+        event?.teams[0]?.users ?
+            event?.teams[0]?.users?.forEach((number: any) => (
+                playersA.push(' 👤 ' + number.name + ' 📩 ' + number.email)
+            )) : []
+        if (playersA.length > 0) {
+            setJogadoresDoTimeA(playersA)
+        } else {
+            setJogadoresDoTimeA('');
+        }
+    }
+
+    const playersTeamB = () => {
+        let playersB: any[] = [];
+        event?.teams[1]?.users ?
+            event?.teams[1]?.users?.forEach((number: any) => (
+                playersB.push(' 👤 ' + number.name + ' ' + ' 📩 ' + ' ' + number.email)
+            )) : []
+        if (playersB.length > 0) {
+            setJogadoresDoTimeB(playersB)
+        } else {
+            setJogadoresDoTimeB('');
+        }
+    }
+
+
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
             style={customStylesModal}
             contentLabel="Example Modal"
+            ariaHideApp={false}
         >
             <TitleModal>{event?.name}</TitleModal>
             <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
@@ -143,17 +197,29 @@ export const MostrarEvento = () => {
                     }
                     <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
                         {
-                            //'teams[0].name' ||     SE CONSEGUIR PEGAR O TEAM DO EVENTO, TIRA ESSE COMMENT E TIRA AS ASPAS ALI.
+                            event?.teams[0]?.name ||
                             'Time A'
                         }
                     </legend>
-                    <InscreverCasaButton onClick={(e) => { e.preventDefault(); setCasaActive(!casaActive) }}>{casaActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverCasaButton>
-                    <SelectCasa onChange={(e) => setTeamCasa(e.target.value)} isActive={casaActive} name="select">
-                        {teamsAdm.map((team, key) => (
-                            <option key={key} value={team.id}>{team.name}</option>
-                        ))}
-                    </SelectCasa>
-                    <ConfirmarButtonCasa onClick={inscreverEquipeCasa} isActive={casaActive}>Confirmar</ConfirmarButtonCasa>
+
+                    {
+                        jogadoresDoTimeA ?
+                            jogadoresDoTimeA.map((player: any, key: any) => (
+                                <p>{player}</p>
+                            )) : ''
+                    }
+                    {
+                        !event?.teams[0] ?
+                            <>
+                                <InscreverCasaButton onClick={(e) => { e.preventDefault(); setCasaActive(!casaActive) }}>{casaActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverCasaButton>
+                                <SelectCasa onChange={(e) => setTeamCasa(e.target.value)} isActive={casaActive} name="select">
+                                    {teamsAdm.map((team, key) => (
+                                        <option key={key} value={team.id}>{team.name}</option>
+                                    ))}
+                                </SelectCasa>
+                                <ConfirmarButtonCasa onClick={inscreverEquipeCasa} isActive={casaActive}>Confirmar</ConfirmarButtonCasa>
+                            </> : ''
+                    }
 
                 </fieldset>
                 {/** Time Visitante */}
@@ -162,18 +228,29 @@ export const MostrarEvento = () => {
                     }
                     <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
                         {
-                            //'teams[1].name' ||     Aqui tenta pegar pela posição 1.
+                            event?.teams[1]?.name ||
                             'Time B'
                         }
                     </legend>
-                    <InscreverVisitanteButton onClick={(e) => { e.preventDefault(); setVisitanteActive(!visitanteActive) }}>{visitanteActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverVisitanteButton>
-                    <SelectVisitante onChange={(e) => setTeamVisitante(e.target.value)} isActive={visitanteActive} name="select">
-                        {teamsAdm.map((team, key) => (
-                            <option key={key} value={team.id}>{team.name}</option>
-                        ))}
-                    </SelectVisitante>
-                    <ConfirmarButtonVisitante onClick={inscreverEquipeVisitante} isActive={visitanteActive}>Confirmar</ConfirmarButtonVisitante>
 
+                    {
+                        jogadoresDoTimeB ?
+                            jogadoresDoTimeB.map((player: any, key: any) => (
+                                <div>{player}</div>
+                            )) : ''
+                    }
+                    {
+                        !event?.teams[1] ?
+                            <>
+                                <InscreverVisitanteButton onClick={(e) => { e.preventDefault(); setVisitanteActive(!visitanteActive) }}>{visitanteActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverVisitanteButton>
+                                <SelectVisitante onChange={(e) => setTeamVisitante(e.target.value)} isActive={visitanteActive} name="select">
+                                    {teamsAdm.map((team, key) => (
+                                        <option key={key} value={team.id}>{team.name}</option>
+                                    ))}
+                                </SelectVisitante>
+                                <ConfirmarButtonVisitante onClick={inscreverEquipeVisitante} isActive={visitanteActive}>Confirmar</ConfirmarButtonVisitante>
+                            </> : ''
+                    }
                 </fieldset>
             </DivEquipes>
             <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
@@ -186,7 +263,7 @@ export const MostrarEvento = () => {
             <Content>
                 <Title>Eventos</Title>
                 <CriarEventoButton onClick={() => navigate('/criar-evento')} type="submit" value="Criar Evento" />
-                <DisplayFlex style={{borderBottom: 'none'}}>
+                <DisplayFlex style={{ borderBottom: 'none' }}>
                     <select onChange={(e) => setFilterCategoria(e.target.value)} name="select">
                         <option defaultChecked value={''}>Todos</option>
 
@@ -196,7 +273,7 @@ export const MostrarEvento = () => {
                     </select>
                     {/*<input type="text" placeholder="Digite o nome do evento" onChange={(e) => setFilterEvento(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>*/}
                 </DisplayFlex>
-                
+
             </Content>
             <EventosContent>
                 {filterCategoria === '' ?

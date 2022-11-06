@@ -87,6 +87,9 @@ export const MinhasEquipes = () => {
     const [attInfos, setAttInfos] = useState(false);
 
 
+    const [alterarModal, setAlterarModal] = useState(false);
+
+
     const auth = useContext(AuthContext);
 
 
@@ -125,12 +128,12 @@ export const MinhasEquipes = () => {
     }, [attInfos])
 
 
-    const handleDelete = async (e: FormEvent) => {
-        e.preventDefault();
-        const response = await api.delete(`/rotadeexcluir/${event?.id}`);
-        setAttInfos(!attInfos);
-        setOpenModal(false);
-    };
+    // const handleDelete = async (e: FormEvent) => {
+    //     e.preventDefault();
+    //     const response = await api.delete(`/rotadeexcluir/${event?.id}`);
+    //     setAttInfos(!attInfos);
+    //     setOpenModal(false);
+    // };
 
     const sendInvitation = async (event: any, e: any) => {
         e.preventDefault();
@@ -179,28 +182,7 @@ export const MinhasEquipes = () => {
 
         >
             <>
-                {filter === 'Administrador' ?
-                    <div>
-                        <TitleModal>Editar equipe</TitleModal>
-                        <ModalContentInputs>
-                            <DisplayFlexInputs>
-                                <span><strong>Nome: </strong></span>
-                                <Nome placeholder="Nome" type="text" value={event?.name} onChange={(e) => setPutName(e.target.value)} required/>
-                            </DisplayFlexInputs>
-
-                            <DisplayFlexInputs>
-                                <br />
-                                <span><strong>Descrição: </strong></span>
-                                <Descricao value={event?.description} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
-                                <button>Salvar Alterações</button>
-                            </DisplayFlexInputs>
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
-                            </div>
-                            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
-                        </ModalContentInputs>
-                    </div> :
-                    filter === 'Participando' ?
+                {filter === 'Administrador' ? !alterarModal ?
                     <div>
                         <TitleModal>{event?.name}</TitleModal>
                         <ModalContentInputs>
@@ -212,25 +194,64 @@ export const MinhasEquipes = () => {
                             {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
                             </div> */}
-                            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                            
+                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
+                            <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
                     </div> :
-                    filter === 'Convidado' ?
+                    <div>
+                        <TitleModal>Editar equipe</TitleModal>
+                        <ModalContentInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Nome: </strong></span>
+                                <Nome placeholder="Nome" type="text" value={event?.name} onChange={(e) => setPutName(e.target.value)} required />
+                            </DisplayFlexInputs>
+
+                            <DisplayFlexInputs>
+                                <br />
+                                <span><strong>Descrição: </strong></span>
+                                <Descricao value={event?.description} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} required />
+                                <button>Salvar Alterações</button>
+                            </DisplayFlexInputs>
+                            {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
+                            </div> */}
+                            
+                            <ModalButton onClick={() => { setOpenModal(false); setAlterarModal(false) }}>Fechar</ModalButton>
+                            <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
+                        </ModalContentInputs>
+                    </div> :
+                    filter === 'Participando' ?
                         <div>
                             <TitleModal>{event?.name}</TitleModal>
-                            <ModalContentInputs >
+                            <ModalContentInputs>
                                 <DisplayFlexInputs>
-                                    <DivFrase>
-                                        <span><strong>{cvt?.name}</strong> deseja entrar na equipe <strong>{inviteWithTeamId.name}</strong>. Aceitar?</span>
-                                    </DivFrase>
+                                    <br />
+                                    <span><strong>Descrição: </strong>{event?.description}</span>
+
                                 </DisplayFlexInputs>
-                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                                    <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Solicitação</ModalButton>
-                                    <ModalButton onClick={(e) => rejectedInvitation(cvt, e)}>Recusar</ModalButton>
-                                </div>
+                                {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
+                            </div> */}
                                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
                             </ModalContentInputs>
-                        </div> : <></>}
+                        </div> :
+                        filter === 'Convidado' ?
+                            <div>
+                                <TitleModal>{event?.name}</TitleModal>
+                                <ModalContentInputs >
+                                    <DisplayFlexInputs>
+                                        <DivFrase>
+                                            <span><strong>{cvt?.name}</strong> deseja entrar na equipe <strong>{inviteWithTeamId.name}</strong>. Aceitar?</span>
+                                        </DivFrase>
+                                    </DisplayFlexInputs>
+                                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                        <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Solicitação</ModalButton>
+                                        <ModalButton onClick={(e) => rejectedInvitation(cvt, e)}>Recusar</ModalButton>
+                                    </div>
+                                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                                </ModalContentInputs>
+                            </div> : <></>}
             </>
         </Modal>
     )
