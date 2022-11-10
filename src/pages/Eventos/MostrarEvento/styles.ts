@@ -25,6 +25,15 @@ export const Title = styled.div`
     font-weight: bold;
     color: #fff;
 `;
+export const SportModal = styled.div`
+    border-bottom: 0.5px solid #ffa562;
+    padding: 1rem 10rem 0rem 10rem;
+    text-align: center;
+    background-color: #ff7815;
+    color: #e0e0e0;
+    font-size: 2.1rem;
+    font-weight: 600;
+`;
 
 export const CriarEventoButton = styled.input`
     cursor: pointer;

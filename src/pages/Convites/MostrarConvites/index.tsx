@@ -1,5 +1,5 @@
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, Cancelar, Aceitar } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, Cancelar, Aceitar, SportModal } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -140,6 +140,7 @@ export const MostrarConvites = () => {
             contentLabel="Example Modal"
         >
             <TitleModal>{event?.name}</TitleModal>
+            
             <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
             <HorarioModal>Vagas: {event?.teamsLimit}</HorarioModal>
             <DivEquipes>

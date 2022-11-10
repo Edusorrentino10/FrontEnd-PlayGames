@@ -91,7 +91,7 @@ export const MeusEventos = () => {
     const handleSubmit = async (e: FormEvent) => {
         console.log(event);
         e.preventDefault();
-        if(putLocation === '' && putName === '' && putTime === '' && putDay === '' && putDescription === '') {
+        if (putLocation === '' && putName === '' && putTime === '' && putDay === '' && putDescription === '' && putTeamsLimit === '') {
             return toast.error('Nenhuma modificação foi feita.');
         }
         if (event !== undefined) {
@@ -101,6 +101,9 @@ export const MeusEventos = () => {
             }
             if (putLocation === '') {
                 setPutLocation(event?.location);
+            }
+            if (putTeamsLimit === '') {
+                setPutName(event?.teamsLimit);
             }
             if (putDescription === '') {
                 setPutDescription(event?.description);
@@ -164,6 +167,8 @@ export const MeusEventos = () => {
                             <p><strong>Data: </strong>{event?.day}</p>
                             <p><strong>Hora: </strong>{event?.time}h</p>
                             <p><strong>Local: </strong>{event?.location}</p>
+                            <p><strong>Vagas: </strong>{event?.teamsLimit}</p>
+                            <p><strong>Modalidade: </strong>{event?.Sport.name}</p>
                             <p><strong>Descrição: </strong>{event?.description}</p>
                             {/* <p><strong>Equipe A: </strong> {event?.}</p> */}
                             <ModalButton onClick={() => {
@@ -194,10 +199,10 @@ export const MeusEventos = () => {
                                 <span><strong>Local: </strong></span>
                                 <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} />
                             </DisplayFlexInputs>
-                            {/* <DisplayFlexInputs>
-         <span><strong>Vagas: </strong></span>
-         <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
-     </DisplayFlexInputs> */}
+                            <DisplayFlexInputs>
+                                <span><strong>Vagas: </strong></span>
+                                <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
+                            </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>

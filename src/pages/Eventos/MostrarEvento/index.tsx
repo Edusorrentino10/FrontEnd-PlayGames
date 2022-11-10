@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa, SportModal } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -104,7 +104,6 @@ export const MostrarEvento = () => {
     }, [attInfos])
 
     const inscreverEquipeCasa = async () => {
-
         if (event) {
             if (event.teams[0] && event.teams[1]) {
                 return toast.error('Evento lotado!')
@@ -144,7 +143,7 @@ export const MostrarEvento = () => {
             setAttInfos(!attInfos)
             toast.success("Time adicionado!")
             setOpenModal(false);
-        }; 
+        };
     };
 
 
@@ -191,8 +190,10 @@ export const MostrarEvento = () => {
             ariaHideApp={false}
         >
             <TitleModal>{event?.name}</TitleModal>
+
             <HorarioModal>{event?.day} - {event?.time}</HorarioModal>
             <HorarioModal>Vagas: {event?.teamsLimit}</HorarioModal>
+            <SportModal>{sports.map((sport) => sport.id === event?.sportId ? sport.name : '')}</SportModal>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <ImgModal src={vslogo} alt="" />
             </div>
@@ -206,11 +207,15 @@ export const MostrarEvento = () => {
                             'Time A'
                         }
                     </legend>
-
+                    <span><strong>Administrador:</strong></span>
+                    {
+                        <p>{jogadoresDoTimeA && jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                    }
+                    <span><strong>Equipe:</strong></span>
                     {
                         jogadoresDoTimeA ?
                             jogadoresDoTimeA.map((player: any, key: any) => (
-                                <p>{player}</p>
+                                <p key={key}>{player}</p>
                             )) : ''
                     }
                     {
@@ -219,7 +224,7 @@ export const MostrarEvento = () => {
                                 <InscreverCasaButton onClick={(e) => { e.preventDefault(); setCasaActive(!casaActive) }}>{casaActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverCasaButton>
                                 <SelectCasa onChange={(e) => setTeamCasa(e.target.value)} isActive={casaActive} name="select">
                                     {teamsAdm.map((team, key) => (
-                                        <option key={key} value={team.id}>{team.name}</option>
+                                        <option key={key} value={team.id} >{team.name}</option>
                                     ))}
                                 </SelectCasa>
                                 <ConfirmarButtonCasa onClick={inscreverEquipeCasa} isActive={casaActive}>Confirmar</ConfirmarButtonCasa>
@@ -237,11 +242,15 @@ export const MostrarEvento = () => {
                             'Time B'
                         }
                     </legend>
-
+                    <span><strong>Administrador:</strong></span>
                     {
-                        jogadoresDoTimeB ?
-                            jogadoresDoTimeB.map((player: any, key: any) => (
-                                <div>{player}</div>
+                        <p>{jogadoresDoTimeA && jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                    }
+                    <span><strong>Equipe:</strong></span>
+{
+                        jogadoresDoTimeA ?
+                            jogadoresDoTimeA.map((player: any, key: any) => (
+                                <p key={key}>{player}</p>
                             )) : ''
                     }
                     {

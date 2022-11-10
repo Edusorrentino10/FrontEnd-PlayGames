@@ -83,16 +83,16 @@ export const MinhasEquipes = () => {
     // estados pra pegar as alterações
     const [putName, setPutName] = useState('');
     const [putDescription, setPutDescription] = useState('');
-    const [putTeamsLimit, setPutTeamsLimit] = useState('');
-    const [putDay, setPutDay] = useState('');
-    const [putTime, setPutTime] = useState('');
-    const [putLocation, setPutLocation] = useState('');
-    const [putSportId, setPutSportId] = useState(event?.Sport?.id);
+    // const [putTeamsLimit, setPutTeamsLimit] = useState('');
+    // const [putDay, setPutDay] = useState('');
+    // const [putTime, setPutTime] = useState('');
+    // const [putLocation, setPutLocation] = useState('');
+    // const [putSportId, setPutSportId] = useState(event?.Sport?.id);
     const [attInfos, setAttInfos] = useState(false);
 
 
-    const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>();
-
+    const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>([]);
+    const [allUsers, setAllUsers] = useState<any>([]);
 
     const [alterarModal, setAlterarModal] = useState(false);
 
@@ -119,8 +119,6 @@ export const MinhasEquipes = () => {
         }
         getTeamsAdm();
 
-
-
         const getTeamsParticipante = async () => {
             const response = await api.get(`/teams/findTeamsImIn/${auth.user.id}`);
             setTeamsParticipante(response.data);
@@ -132,6 +130,14 @@ export const MinhasEquipes = () => {
             setSports(response.data);
         }
         getSports();
+
+
+        const getAllUsers = async () => {
+            const response = await api.get(`/users`);
+            console.log(response.data);
+            setAllUsers(response.data);
+        }
+        getAllUsers();
     }, [attInfos])
 
 
@@ -243,11 +249,16 @@ export const MinhasEquipes = () => {
                         <ModalContentInputs>
                             <DisplayFlexInputs>
                                 <br />
-                                <span><strong>Integrantes: </strong></span>
+                                <span><strong>Administrador: </strong></span>
+
+                                <p>{jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+
+                                <br />
+                                <span><strong>Equipe: </strong></span>
                                 {
                                     jogadoresDoTimeA ?
                                         jogadoresDoTimeA.map((player: any, key: any) => (
-                                            <p>{player}</p>
+                                            <p key={key}>{player}</p>
                                         )) : ''
                                 }
                                 <br />
@@ -301,14 +312,19 @@ export const MinhasEquipes = () => {
                             <ModalContentInputs>
                                 <DisplayFlexInputs>
                                     <br />
-                                    <span><strong>Integrantes: </strong></span>
-                                {
-                                    jogadoresDoTimeA ?
-                                        jogadoresDoTimeA.map((player: any, key: any) => (
-                                            <p>{player}</p>
-                                        )) : ''
-                                }
-                                <br />
+                                    <span><strong>Administrador: </strong></span>
+                                    {
+                                        <p>{jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                                    }
+                                    <br />
+                                    <span><strong>Equipe: </strong></span>
+                                    {
+                                        jogadoresDoTimeA ?
+                                            jogadoresDoTimeA.map((player: any, key: any) => (
+                                                <p key={key}>{event?.createdBy !== player.id ? player : ''}</p>
+                                            )) : ''
+                                    }
+                                    <br />
                                     <span><strong>Descrição: </strong>{event?.description}</span>
 
                                 </DisplayFlexInputs>
@@ -394,7 +410,7 @@ export const MinhasEquipes = () => {
                                     <ValueFiltro>Participando</ValueFiltro>
                                 </Evento>
                             </div>
-                        ) : filter === 'Convidado' ?
+                        ) : filter === 'Convidado' && invitations ?
                             // filtrar com o atributo que verifica se o user foi convidado e pegar os convites
                             invitations.map((convite, key) =>
                                 <div key={key}>

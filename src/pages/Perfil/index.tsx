@@ -26,6 +26,8 @@ export const Perfil = () => {
     console.log(auth.user)
     console.log(perfilUsuario);
 
+    
+
     return (
         <Container>
             <Header />

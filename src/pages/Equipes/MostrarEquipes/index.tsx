@@ -1,17 +1,17 @@
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, SportModal } from './styles';
 import { GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import {useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../../assets/VSlogo.png';
 import Modal from 'react-modal';
 import { api } from '../../../services/api';
-import {AuthContext} from "../../../contexts/AuthContext";
-import {toast, ToastContainer} from "react-toastify";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const customStylesModal = {
     content: {
@@ -54,8 +54,10 @@ type EventsProps = {
 type TeamsProps = {
     id: string,
     name: string,
+    sportId: string,
     description: string,
     createdAt: string,
+    createdBy: string,
     updatedAt: string,
     users: [{
         id: string,
@@ -90,8 +92,9 @@ export const MostrarEquipes = () => {
         getSports();
 
     }, [])
-    
+
     const sendInvitation = async () => {
+
         const response = await api.post('/users/teamInvitation', {
             teamId: team?.id,
             userId: auth.user.id,
@@ -110,20 +113,27 @@ export const MostrarEquipes = () => {
             contentLabel="Example Modal"
             ariaHideApp={false}
         >
-            <TitleModal>Equipe</TitleModal>
+            <TitleModal>{team?.name}</TitleModal>
+            
+            <SportModal>{sports.map((sport) => sport.id === team?.sportId ? sport.name : '')}</SportModal>
             <DivEquipes>
                 <fieldset style={{ border: '3px solid #ffa562' }}>
                     <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
                         {team?.name}
                     </legend>
-                    { <div>
-                        {team?.users.map((jogador, key) =>
+                    {<div>
+                        <span><strong>Administrador:</strong></span>
+
+                            <p>{ team?.users[0] ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
+                        
+                        <span><strong>Equipe:</strong></span>
+                        {team?.users?.map((jogador, key) =>
                             <p key={key}>{' 👤 ' + jogador.name + ' 📩 ' + jogador.email}</p>
                         )}
-                    </div> }
+                    </div>}
                 </fieldset>
             </DivEquipes>
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <ModalButton onClick={() => sendInvitation()}>Enviar Solicitação</ModalButton>
                 <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
             </div>
@@ -138,15 +148,15 @@ export const MostrarEquipes = () => {
                 <CriarEventoButton onClick={() => navigate('/criar-equipe')} type="submit" value="Criar Equipe" />
                 {/*<select onChange={(e) => setFilter(e.target.value)} name="select">*/}
                 {/*    <option defaultChecked value={''}>Todos</option>*/}
-                
+
                 {/*    {sports.map((item) =>*/}
                 {/*        <option value={item.name}>{item.name}</option>*/}
                 {/*    )}*/}
                 {/*</select>*/}
-                <input type="text" placeholder="Digite o nome da equipe" onChange={(e) => setFilter(e.target.value)} style={{marginTop:'1.2rem', padding:'10px'}}/>
+                <input type="text" placeholder="Digite o nome da equipe" onChange={(e) => setFilter(e.target.value)} style={{ marginTop: '1.2rem', padding: '10px' }} />
             </Content>
             <EventosContent>
-               {filter === '' ?
+                {filter === '' ?
                     teams.map((team, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
@@ -156,6 +166,9 @@ export const MostrarEquipes = () => {
                             }>
                                 <DisplayFlex>
                                     <NomeEvento>{team.name}</NomeEvento>
+                                </DisplayFlex>
+                                <DisplayFlex>
+                                    <NomeEvento>{sports.map((sport) => sport.id === team.sportId ? sport.name : '')}</NomeEvento>
                                 </DisplayFlex>
                                 <DescricaoEvento>{team.description}</DescricaoEvento>
                             </Evento>
@@ -170,6 +183,9 @@ export const MostrarEquipes = () => {
                             }>
                                 <DisplayFlex>
                                     <NomeEvento>{team.name}</NomeEvento>
+                                </DisplayFlex>
+                                <DisplayFlex>
+                                    <NomeEvento>{sports.map((sport) => sport.id === team.sportId ? sport.name : '')}</NomeEvento>
                                 </DisplayFlex>
                                 <DescricaoEvento>{team.description}</DescricaoEvento>
                             </Evento>
