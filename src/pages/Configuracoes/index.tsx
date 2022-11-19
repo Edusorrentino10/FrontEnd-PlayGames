@@ -157,7 +157,7 @@ export const Configuracoes = () => {
             <Title>Configurações da Conta</Title>
             <Content>
                 <DivArrow>
-                    <BiArrowBack color='black' size={26} />
+                    <BiArrowBack color='black' size={26} onClick={() => navigate('/perfil')} />
                 </DivArrow>
                 <form >
                     <InputNome value={name} onChange={(e) => setName(e.target.value)} placeholder={userPerfil?.name} type="text" required />

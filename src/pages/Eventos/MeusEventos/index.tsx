@@ -1,17 +1,18 @@
 import { Header } from '../../../components/Header';
 import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro } from './styles';
-import { GiSoccerBall } from 'react-icons/gi';
-import { AiFillClockCircle } from 'react-icons/ai';
+import { GiSoccerBall, GiBasketballBall, GiVolleyballBall } from 'react-icons/gi';
 import { RiComputerLine } from 'react-icons/ri';
+import { AiFillClockCircle } from 'react-icons/ai';
+
 import { useNavigate } from 'react-router-dom';
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
-import { GiVolleyballBall } from 'react-icons/gi';
 import vslogo from '../../assets/VSlogo.png';
 import Modal from 'react-modal';
 import { api } from '../../../services/api';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
+import { eventWrapper } from '@testing-library/user-event/dist/utils';
 
 const customStylesModal = {
     content: {
@@ -75,17 +76,26 @@ export const MeusEventos = () => {
 
 
     const [alterarModal, setAlterarModal] = useState(false);
-
+    const [eventParticipation, setEventParticipation] = useState<any[]>([]);
 
     const auth = useContext(AuthContext);
 
 
     useEffect(() => {
         const getEvents = async () => {
-            const response = await api.get(`/events/myEvents/${auth.user.id}`);
-            setMyEvents(response.data);
+            const response = await api.get(`/events`);
+            setMyEvents(response.data)
         }
         getEvents();
+
+        const getEventsImIn = async () => {
+            const response = await api.get(`/events/eventsImIn/${auth.user.id}`);
+            setEventParticipation(response.data)
+            console.log(eventParticipation);
+        };
+        getEventsImIn();
+
+
     }, [attInfos])
 
     const handleSubmit = async (e: FormEvent) => {
@@ -183,7 +193,8 @@ export const MeusEventos = () => {
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
                     </div>
-                    : <div>
+                    :
+                    <div>
                         <TitleModal>{event?.name}</TitleModal>
                         <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
@@ -201,7 +212,7 @@ export const MeusEventos = () => {
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Vagas: </strong></span>
-                                <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" required />
+                                <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <br />
@@ -225,7 +236,41 @@ export const MeusEventos = () => {
 
                         </ModalContentInputs>
                     </div>
-                    : ''
+                    :
+                    <div>
+                        <TitleModal>{event?.name}</TitleModal>
+                        <ModalContentInputs onSubmit={handleSubmit}>
+                            <DisplayFlexInputs>
+                                <span><strong>Nome: </strong>{event?.name}</span>
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Modalidade: </strong>{event?.Sport?.name}</span>
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Data/Hora: </strong>{event?.day} - {event?.time}</span>
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Local: </strong>{event?.location}</span>
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Vagas: </strong>{event?.teamsLimit}</span>
+                            </DisplayFlexInputs>
+                            <DisplayFlexInputs>
+                                <span><strong>Descrição: </strong>{event?.description}</span>
+                            </DisplayFlexInputs>
+                            <ModalButton onClick={() => {
+                                setOpenModal(false);
+                                setAlterarModal(false);
+                                setPutDescription('');
+                                setPutLocation('');
+                                setPutName('');
+                                setPutDay('');
+                                setPutTime('');
+                            }}>Fechar</ModalButton>
+
+                        </ModalContentInputs>
+                    </div>
+
                 }
             </>
         </Modal>
@@ -268,16 +313,22 @@ export const MeusEventos = () => {
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
                                 <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
+                                    {
+                                        evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                            evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                    evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                    }
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
                                 <ValueFiltro>Administrador</ValueFiltro>
                             </Evento>
                         </div>
+                        // pedir pro backend fazer uma rota pra pegar esse participando aqui, tentar pegar outra rota la que pedi pro Joao fazer e fazer o map de um novo state
                     ) : filter === 'Participando' ?
                         // filtrar com o atributo que verifica se o user é participante mas nao é administrador.
-                        myEvents.map((evento, key) => auth.user.id !== evento.createdBy &&
+                        eventParticipation.map((evento, key) =>
                             <div key={key}>
                                 <Evento onClick={() => {
                                     setOpenModal(true)
@@ -290,7 +341,12 @@ export const MeusEventos = () => {
                                     </DisplayFlex>
                                     <LocalEvento>{evento.location}</LocalEvento>
                                     <ModalidadeEvento>{evento.Sport?.name}
-                                        <GiSoccerBall style={{ marginLeft: '1rem' }} />
+                                        {
+                                            evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: 'rem' }} /> :
+                                                    evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: 'rem' }} /> :
+                                                        evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: 'rem' }} /> : ''
+                                        }
                                     </ModalidadeEvento>
                                     <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                     <DescricaoEvento>{evento.description}</DescricaoEvento>

@@ -61,7 +61,13 @@ export const Evento = styled.div`
 `;
 
 export const NomeEvento = styled.div`
-    padding: 0.7rem;
+        padding: 0.5rem;
+    transition: 0.5s;
+    background: #FF7815;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const HorarioEvento = styled.div`

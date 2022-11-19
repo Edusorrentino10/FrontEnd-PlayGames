@@ -222,6 +222,16 @@ export const TitleModal = styled.div`
     font-size: 3rem;
     font-weight: 600;
 `;
+
+export const SubTitleModal = styled.div`
+    border-bottom: 0.5px solid #ffa562;
+    padding: 0.3rem;
+    text-align: center;
+    background-color: #ff7815;
+    color: #e0e0e0;
+    font-size: 1.6rem;
+    font-weight: 600;
+`;
 export const HorarioModal = styled.div`
     border-bottom: 3px solid #ffa562;
     text-align: center;

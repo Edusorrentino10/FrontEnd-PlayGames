@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
 import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa, SportModal } from './styles';
-import { GiSoccerBall } from 'react-icons/gi';
+import { GiBasketballBall, GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -79,6 +79,11 @@ export const MostrarEvento = () => {
     const [jogadoresDoTimeA, setJogadoresDoTimeA] = useState<any>();
     const [jogadoresDoTimeB, setJogadoresDoTimeB] = useState<any>();
 
+    const [allTeams, setAllTeams] = useState<any>();
+
+    const [allVisitante, setAllVisitante] = useState<any>();
+    const [allCasa, setAllCasa] = useState<any>();
+
 
     useEffect(() => {
 
@@ -87,6 +92,12 @@ export const MostrarEvento = () => {
             setEvents(response.data);
         }
         getEvents();
+
+        const getTeams = async () => {
+            const response = await api.get(`/teams`);
+            setAllTeams(response.data);
+        }
+        getTeams();
 
         const getTeamsAdm = async () => {
             const response = await api.get(`/teams/findMyTeams/${auth.user.id}`);
@@ -109,13 +120,17 @@ export const MostrarEvento = () => {
                 return toast.error('Evento lotado!')
             }
         }
-        console.log(event)
 
-        console.log(teamCasa)
-        console.log('aaaaa')
         if (teamCasa === '') {
             setTeamCasa(teamsAdm[0].id)
         }
+
+        allTeams.map((team: any) => team.id === teamCasa ? setAllCasa(team) : '')
+
+        if (event?.sportId !== allCasa.sportId) {
+            return toast.error('Modalidade da equipe é diferente do evento.');
+        }
+
         if (event && teamCasa) {
             const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamCasa}`);
             setAttInfos(!attInfos)
@@ -134,10 +149,17 @@ export const MostrarEvento = () => {
         if (teamVisitante === '') {
             setTeamVisitante(teamsAdm[0].id)
         }
-        console.log(event)
 
-        console.log(teamVisitante)
-        console.log('aaaaa')
+        if (event?.teams[0].id === teamVisitante) {
+            return toast.error('Equipe já está inscrita!')
+        }
+
+        allTeams.map((team: any) => team.id === teamVisitante ? setAllVisitante(team) : '')
+
+        if (event?.sportId !== allVisitante.sportId) {
+            return toast.error('Modalidade da equipe é diferente do evento.');
+        }
+
         if (event && teamVisitante) {
             const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`);
             setAttInfos(!attInfos)
@@ -244,12 +266,12 @@ export const MostrarEvento = () => {
                     </legend>
                     <span><strong>Administrador:</strong></span>
                     {
-                        <p>{jogadoresDoTimeA && jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                        <p>{jogadoresDoTimeB && jogadoresDoTimeB[0] ? jogadoresDoTimeB[0] : ''}</p>
                     }
                     <span><strong>Equipe:</strong></span>
-{
-                        jogadoresDoTimeA ?
-                            jogadoresDoTimeA.map((player: any, key: any) => (
+                    {
+                        jogadoresDoTimeB ?
+                            jogadoresDoTimeB.map((player: any, key: any) => (
                                 <p key={key}>{player}</p>
                             )) : ''
                     }
@@ -304,7 +326,12 @@ export const MostrarEvento = () => {
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
                                 <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
+                                    {
+                                        evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                            evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                    evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                    }
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
@@ -324,7 +351,12 @@ export const MostrarEvento = () => {
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
                                 <ModalidadeEvento>{evento.Sport?.name}
-                                    <GiSoccerBall style={{ marginLeft: '1rem' }} />
+                                {
+                                        evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                            evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                    evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                    }
                                 </ModalidadeEvento>
                                 <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento>
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>

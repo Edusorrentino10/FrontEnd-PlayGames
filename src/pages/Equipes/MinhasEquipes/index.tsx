@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro, DivFrase } from './styles';
-import { GiSoccerBall } from 'react-icons/gi';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, ModalContentInputs, ExcluirEvento, DisplayFlexInputs, Nome, Data, Hora, Local, Vagas, Descricao, ValueFiltro, DivFrase, SubTitleModal } from './styles';
+import { GiBasketballBall, GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -97,10 +97,14 @@ export const MinhasEquipes = () => {
     const [alterarModal, setAlterarModal] = useState(false);
 
 
+
+
     const auth = useContext(AuthContext);
 
 
     useEffect(() => {
+
+
         const getTeamsAdm = async () => {
             const response = await api.get(`/teams/findMyTeams/${auth.user.id}`);
             setTeamsAdm(response.data);
@@ -190,6 +194,9 @@ export const MinhasEquipes = () => {
         e.preventDefault();
         if (event !== undefined) {
 
+            if (putName === '' && putDescription === '') {
+                return toast.error('Nenhuma alteração foi feita.')
+            }
 
             const response = await api.put(`/teams/${event?.id}`, {
                 name: putName !== '' ? putName : event?.name,
@@ -228,6 +235,13 @@ export const MinhasEquipes = () => {
         console.log(event)
     }
 
+    const handleDelete = async (e: FormEvent) => {
+        e.preventDefault();
+        const response = await api.delete(`/teams/${event?.id}`);
+        toast.success('Equipe excluída!');
+        setAttInfos(!attInfos);
+        setOpenModal(false);
+    };
 
 
 
@@ -246,6 +260,7 @@ export const MinhasEquipes = () => {
                 {filter === 'Administrador' ? !alterarModal ?
                     <div>
                         <TitleModal>{event?.name}</TitleModal>
+                        <SubTitleModal>{event?.Sport.name}</SubTitleModal>
                         <ModalContentInputs>
                             <DisplayFlexInputs>
                                 <br />
@@ -286,16 +301,15 @@ export const MinhasEquipes = () => {
                                 <span><strong>Nome: </strong></span>
                                 <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} />
                             </DisplayFlexInputs>
-
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
                                 <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
-                            {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Excluir Equipe</ExcluirEvento>
-                            </div> */}
+                            </div>
 
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
@@ -309,6 +323,7 @@ export const MinhasEquipes = () => {
                     filter === 'Participando' ?
                         <div>
                             <TitleModal>{event?.name}</TitleModal>
+                            <SubTitleModal>{event?.Sport.name}</SubTitleModal>
                             <ModalContentInputs>
                                 <DisplayFlexInputs>
                                     <br />
@@ -388,6 +403,14 @@ export const MinhasEquipes = () => {
                                 <DisplayFlex>
                                     <NomeEvento>{evento.name}</NomeEvento>
                                 </DisplayFlex>
+                                <ModalidadeEvento>{evento.Sport?.name}
+                                    {
+                                        evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                            evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                    evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                    }
+                                </ModalidadeEvento>
                                 {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                 <DescricaoEvento>{evento.description}</DescricaoEvento>
                                 <ValueFiltro>Administrador</ValueFiltro>
@@ -405,6 +428,14 @@ export const MinhasEquipes = () => {
                                     <DisplayFlex>
                                         <NomeEvento>{evento.name}</NomeEvento>
                                     </DisplayFlex>
+                                    <ModalidadeEvento>{evento.Sport?.name}
+                                        {
+                                            evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                                evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                    evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                        evento.Sport.name === 'eSports' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                        }
+                                    </ModalidadeEvento>
                                     {/* <VagasEvento>Vagas: {evento.teamsLimit}</VagasEvento> */}
                                     <DescricaoEvento>{evento.description}</DescricaoEvento>
                                     <ValueFiltro>Participando</ValueFiltro>

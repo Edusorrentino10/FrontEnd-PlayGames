@@ -37,8 +37,8 @@ export const Perfil = () => {
                     <BsFillPersonFill size={60} />
                 </Column>
                 <Column>
-                    <Nome><strong>Nome:</strong>{auth.user.name}</Nome>
-                    <Email><strong>Email:</strong>{auth.user.email}</Email>
+                    <Nome><strong>Nome: </strong>{auth.user.name}</Nome>
+                    <Email><strong>Email: </strong>{auth.user.email}</Email>
                 </Column>
             </Content>
             <SegundoContent>

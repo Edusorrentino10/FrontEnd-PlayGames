@@ -1,6 +1,6 @@
 import { Header } from '../../../components/Header';
 import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, SportModal } from './styles';
-import { GiSoccerBall } from 'react-icons/gi';
+import { GiBasketballBall, GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -114,7 +114,7 @@ export const MostrarEquipes = () => {
             ariaHideApp={false}
         >
             <TitleModal>{team?.name}</TitleModal>
-            
+
             <SportModal>{sports.map((sport) => sport.id === team?.sportId ? sport.name : '')}</SportModal>
             <DivEquipes>
                 <fieldset style={{ border: '3px solid #ffa562' }}>
@@ -124,8 +124,8 @@ export const MostrarEquipes = () => {
                     {<div>
                         <span><strong>Administrador:</strong></span>
 
-                            <p>{ team?.users[0] ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
-                        
+                        <p>{team?.users[0] ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
+
                         <span><strong>Equipe:</strong></span>
                         {team?.users?.map((jogador, key) =>
                             <p key={key}>{' 👤 ' + jogador.name + ' 📩 ' + jogador.email}</p>
@@ -168,7 +168,13 @@ export const MostrarEquipes = () => {
                                     <NomeEvento>{team.name}</NomeEvento>
                                 </DisplayFlex>
                                 <DisplayFlex>
-                                    <NomeEvento>{sports.map((sport) => sport.id === team.sportId ? sport.name : '')}</NomeEvento>
+                                    <NomeEvento>{sports.map((sport) => sport.id === team.sportId ? sport.name : '')}
+                                        {
+                                            team.sportId === 'a9e0dad8-b935-4cd2-9fd9-930d6700e73a' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
+                                                team.sportId === 'a0c01f5b-9241-4057-9e2a-8e448bae87e5' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
+                                                    team.sportId === '73eb6b3f-9c81-44ee-8f8c-ab5483c805ea' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :
+                                                        team.sportId === 'aefcbfd3-484a-4d1f-8534-f60b57e125a6' ? <RiComputerLine style={{ marginLeft: '1rem' }} /> : ''
+                                        }</NomeEvento>
                                 </DisplayFlex>
                                 <DescricaoEvento>{team.description}</DescricaoEvento>
                             </Evento>
