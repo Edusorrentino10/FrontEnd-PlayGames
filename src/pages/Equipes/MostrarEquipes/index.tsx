@@ -134,7 +134,7 @@ export const MostrarEquipes = () => {
                         <span><strong>Administrador:</strong></span>
 
 
-                        {team?.users?.map((jogador: any) => setAdminCurrent(jogador))}
+                        {team?.users?.map((jogador: any) => team?.createdBy === jogador.id ? setAdminCurrent(jogador) : '')}
                         {adminCurrent !== undefined &&
                             <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
                         }

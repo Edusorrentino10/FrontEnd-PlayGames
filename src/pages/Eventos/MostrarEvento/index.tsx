@@ -52,7 +52,8 @@ type EventsProps = {
         name: string,
     },
     teams: any,
-    users: any
+    users: any,
+    createdBy: string,
 }
 
 export const MostrarEvento = () => {
@@ -255,7 +256,8 @@ export const MostrarEvento = () => {
                         }
                     </legend>
                     <span><strong>Administrador:</strong></span>
-                    {event?.teams[0]?.users?.map((jogador: any) => setAdminCurrentCasa(jogador))}
+                    {/* {event?.teams[0]?.users?.map((jogador: any) => setAdminCurrentCasa(jogador))} */}
+                    {event?.teams[0]?.users?.map((jogador: any) => event?.createdBy === jogador.id ? setAdminCurrentCasa(jogador) : '')}
                     {adminCurrentCasa !== undefined &&
                         <p>{' 👤 ' + adminCurrentCasa?.name + ' 📩 ' + adminCurrentCasa?.email}</p>
                     }
@@ -293,7 +295,7 @@ export const MostrarEvento = () => {
                     </legend>
                     <span><strong>Administrador:</strong></span>
 
-                    {event?.teams[1]?.users?.map((jogador: any) => setAdminCurrentVisitante(jogador))}
+                    {event?.teams[1]?.users?.map((jogador: any) => event?.createdBy === jogador.id ? setAdminCurrentVisitante(jogador) : '')}
                     {adminCurrentVisitante !== undefined &&
                         <p>{' 👤 ' + adminCurrentVisitante?.name + ' 📩 ' + adminCurrentVisitante?.email}</p>
                     }
