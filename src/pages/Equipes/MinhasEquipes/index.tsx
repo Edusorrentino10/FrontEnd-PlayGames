@@ -81,7 +81,7 @@ export const MinhasEquipes = () => {
     const [filter, setFilter] = useState('Administrador')
 
     // estados pra pegar as alterações
-    
+
     // const [putName, setPutName] = useState('');
     // const [putDescription, setPutDescription] = useState('');
 
@@ -317,7 +317,7 @@ export const MinhasEquipes = () => {
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao  onChange={(e) => changeTeam.putDescription} placeholder={event?.description} />
+                                <Descricao onChange={(e) => changeTeam.putDescription} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -328,7 +328,7 @@ export const MinhasEquipes = () => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
                                 changeTeam.putName = ''
-                                changeTeam.putDescription= ''
+                                changeTeam.putDescription = ''
                             }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
                         </ModalContentInputs>
@@ -341,9 +341,10 @@ export const MinhasEquipes = () => {
                                 <DisplayFlexInputs>
                                     <br />
                                     <span><strong>Administrador: </strong></span>
-                                    {
-                                        <p>{jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
-                                    }
+
+                                    {event?.users?.map((jogador: any) => setAdminCurrent(jogador))}
+                                    <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
+                                    
                                     <br />
                                     <span><strong>Equipe: </strong></span>
                                     {
