@@ -175,6 +175,7 @@ export const MinhasEquipes = () => {
             }
             toast.success("Convite aceito!")
             setAttInfos(!attInfos);
+            setAdminCurrent(undefined);
             setOpenModal(false)
             setInvitations(invitations.filter(x => x.id !== cvt?.id))
             window.open(`mailto:${cvt?.email}
@@ -196,6 +197,7 @@ export const MinhasEquipes = () => {
             }
             toast.warn("Convite rejeitado!")
             setAttInfos(!attInfos);
+            setAdminCurrent(undefined);
             setOpenModal(false)
         } catch (error) {
             console.log(error)
@@ -216,6 +218,7 @@ export const MinhasEquipes = () => {
             })
             toast.success('Alterações salvas!');
             setAttInfos(!attInfos);
+            setAdminCurrent(undefined);
             setOpenModal(false);
             setAlterarModal(false)
             changeTeam.putName = '';
@@ -252,6 +255,7 @@ export const MinhasEquipes = () => {
         const response = await api.delete(`/teams/${event?.id}`);
         toast.success('Equipe excluída!');
         setAttInfos(!attInfos);
+        setAdminCurrent(undefined);
         setOpenModal(false);
     };
 
@@ -279,7 +283,9 @@ export const MinhasEquipes = () => {
                                 <span><strong>Administrador: </strong></span>
 
                                 {event?.users?.map((jogador: any) => setAdminCurrent(jogador))}
-                                <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
+                                {adminCurrent !== undefined &&
+                                    <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
+                                }
 
                                 <br />
                                 <span><strong>Equipe: </strong></span>
@@ -299,6 +305,7 @@ export const MinhasEquipes = () => {
                             </div> */}
 
                             <ModalButton onClick={() => {
+                                setAdminCurrent(undefined);
                                 setOpenModal(false);
                                 setAlterarModal(false);
                                 changeTeam.putName = ''
@@ -344,7 +351,7 @@ export const MinhasEquipes = () => {
 
                                     {event?.users?.map((jogador: any) => setAdminCurrent(jogador))}
                                     <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
-                                    
+
                                     <br />
                                     <span><strong>Equipe: </strong></span>
                                     {
@@ -360,7 +367,7 @@ export const MinhasEquipes = () => {
                                 {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
                                 <ExcluirEvento onClick={handleDelete}>Sair da Equipe</ExcluirEvento>
                             </div> */}
-                                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                                <ModalButton onClick={() => { setOpenModal(false); setAdminCurrent(undefined); }}>Fechar</ModalButton>
                             </ModalContentInputs>
                         </div> :
                         filter === 'Convidado' ?
@@ -376,7 +383,7 @@ export const MinhasEquipes = () => {
                                         <ModalButton onClick={(e) => sendInvitation(cvt, e)}>Aceitar Solicitação</ModalButton>
                                         <ModalButton onClick={(e) => rejectedInvitation(cvt, e)}>Recusar</ModalButton>
                                     </div>
-                                    <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                                    <ModalButton onClick={() => { setOpenModal(false); setAdminCurrent(undefined); }}>Fechar</ModalButton>
                                 </ModalContentInputs>
                             </div> : <></>}
             </>
@@ -410,6 +417,7 @@ export const MinhasEquipes = () => {
                     teamsAdm.map((evento, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
+                                setAdminCurrent(undefined);
                                 setOpenModal(true)
                                 setEvent(evento)
                             }
@@ -435,6 +443,7 @@ export const MinhasEquipes = () => {
                         teamsParticipante.map((evento, key) =>
                             <div key={key}>
                                 <Evento onClick={() => {
+                                    setAdminCurrent(undefined);
                                     setOpenModal(true)
                                     setEvent(evento)
                                 }
@@ -460,6 +469,7 @@ export const MinhasEquipes = () => {
                             invitations.map((convite, key) =>
                                 <div key={key}>
                                     <Evento onClick={() => {
+                                        setAdminCurrent(undefined);
                                         setOpenModal(true)
                                         setCvt(convite)
                                     }
