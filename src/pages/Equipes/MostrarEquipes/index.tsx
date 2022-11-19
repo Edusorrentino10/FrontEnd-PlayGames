@@ -94,6 +94,17 @@ export const MostrarEquipes = () => {
     }, [])
 
     const sendInvitation = async () => {
+        console.log(team)
+        if (auth.user.id === team?.createdBy) {
+            if (team) {
+                const response = await api.post('/users/teamInvitation', {
+                    teamId: team.id,
+                    userId: auth.user.id,
+                    invitation: "accepted"
+                });
+            }
+            return toast.success('Entrou na equipe com sucesso.');
+        }
 
         const response = await api.post('/users/teamInvitation', {
             teamId: team?.id,

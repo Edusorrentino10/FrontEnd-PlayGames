@@ -13,7 +13,7 @@ export const Perfil = () => {
 
     const navigate = useNavigate();
 
-    const [perfilUsuario, setPerfilUsuario] = useState([])
+    const [perfilUsuario, setPerfilUsuario] = useState<any>([])
     const auth = useContext(AuthContext);
 
     useEffect(() => {
@@ -23,9 +23,6 @@ export const Perfil = () => {
         }
         getPerfil();
     }, [])
-    console.log(auth.user)
-    console.log(perfilUsuario);
-
     
 
     return (
@@ -37,8 +34,8 @@ export const Perfil = () => {
                     <BsFillPersonFill size={60} />
                 </Column>
                 <Column>
-                    <Nome><strong>Nome: </strong>{auth.user.name}</Nome>
-                    <Email><strong>Email: </strong>{auth.user.email}</Email>
+                    <Nome><strong>Nome: </strong>{perfilUsuario?.name}</Nome>
+                    <Email><strong>Email: </strong>{perfilUsuario?.email}</Email>
                 </Column>
             </Content>
             <SegundoContent>
