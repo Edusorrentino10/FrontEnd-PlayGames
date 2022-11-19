@@ -81,13 +81,21 @@ export const MinhasEquipes = () => {
     const [filter, setFilter] = useState('Administrador')
 
     // estados pra pegar as alterações
-    const [putName, setPutName] = useState('');
-    const [putDescription, setPutDescription] = useState('');
+    
+    // const [putName, setPutName] = useState('');
+    // const [putDescription, setPutDescription] = useState('');
+
+    const changeTeam = {
+        putName: '',
+        putDescription: '',
+    }
+
     // const [putTeamsLimit, setPutTeamsLimit] = useState('');
     // const [putDay, setPutDay] = useState('');
     // const [putTime, setPutTime] = useState('');
     // const [putLocation, setPutLocation] = useState('');
     // const [putSportId, setPutSportId] = useState(event?.Sport?.id);
+
     const [attInfos, setAttInfos] = useState(false);
 
 
@@ -100,6 +108,7 @@ export const MinhasEquipes = () => {
 
 
     const auth = useContext(AuthContext);
+
 
 
     useEffect(() => {
@@ -194,20 +203,20 @@ export const MinhasEquipes = () => {
         e.preventDefault();
         if (event !== undefined) {
 
-            if (putName === '' && putDescription === '') {
+            if (changeTeam.putName === '' && changeTeam.putDescription === '') {
                 return toast.error('Nenhuma alteração foi feita.')
             }
 
             const response = await api.put(`/teams/${event?.id}`, {
-                name: putName !== '' ? putName : event?.name,
-                description: putDescription !== '' ? putDescription : event?.description
+                name: changeTeam.putName !== '' ? changeTeam.putName : event?.name,
+                description: changeTeam.putDescription !== '' ? changeTeam.putDescription : event?.description
             })
             toast.success('Alterações salvas!');
             setAttInfos(!attInfos);
             setOpenModal(false);
             setAlterarModal(false)
-            setPutName('');
-            setPutDescription('');
+            changeTeam.putName = '';
+            changeTeam.putDescription = ''
 
         }
     }
@@ -288,8 +297,8 @@ export const MinhasEquipes = () => {
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
-                                setPutName('');
-                                setPutDescription('');
+                                changeTeam.putName = ''
+                                changeTeam.putDescription = ''
                             }}>Fechar</ModalButton>
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
@@ -299,12 +308,12 @@ export const MinhasEquipes = () => {
                         <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} />
+                                <Nome placeholder={event?.name} type="text" onChange={(e) => changeTeam.putName = e.target.value} />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} />
+                                <Descricao  onChange={(e) => changeTeam.putDescription} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -314,8 +323,8 @@ export const MinhasEquipes = () => {
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
-                                setPutName('');
-                                setPutDescription('');
+                                changeTeam.putName = ''
+                                changeTeam.putDescription= ''
                             }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
                         </ModalContentInputs>

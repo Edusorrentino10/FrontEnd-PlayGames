@@ -35,6 +35,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState('');
 
 
+
+
   useEffect(() => {
     const validateToken = async () => {
         const storageData = localStorage.getItem('authToken');
@@ -85,7 +87,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         signOut,
         isSigningIn,
         token,
-        user
+        user,
+
       }}
     >
       {children}

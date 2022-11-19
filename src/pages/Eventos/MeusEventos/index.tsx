@@ -65,13 +65,24 @@ export const MeusEventos = () => {
     const [filter, setFilter] = useState('Administrador')
 
     // estados pra pegar as alterações
-    const [putName, setPutName] = useState('');
-    const [putDescription, setPutDescription] = useState('');
-    const [putTeamsLimit, setPutTeamsLimit] = useState('');
-    const [putDay, setPutDay] = useState('');
-    const [putTime, setPutTime] = useState('');
-    const [putLocation, setPutLocation] = useState('');
+    // const [putName, setPutName] = useState('');
+    // const [putDescription, setPutDescription] = useState('');
+    // const [putTeamsLimit, setPutTeamsLimit] = useState('');
+    // const [putDay, setPutDay] = useState('');
+    // const [putTime, setPutTime] = useState('');
+    // const [putLocation, setPutLocation] = useState('');
     const [putSportId, setPutSportId] = useState(event?.Sport?.id);
+
+    const changeEvent = {
+        putName: '',
+        putDescription: '',
+        putTeamsLimit: '',
+        putDay: '',
+        putTime: '',
+        putLocation: '',
+    }
+
+
     const [attInfos, setAttInfos] = useState(false);
 
 
@@ -101,28 +112,28 @@ export const MeusEventos = () => {
     const handleSubmit = async (e: FormEvent) => {
         console.log(event);
         e.preventDefault();
-        if (putLocation === '' && putName === '' && putTime === '' && putDay === '' && putDescription === '' && putTeamsLimit === '') {
+        if (changeEvent.putLocation === '' && changeEvent.putName === '' && changeEvent.putTime === '' && changeEvent.putDay === '' && changeEvent.putDescription === '' && changeEvent.putTeamsLimit === '') {
             return toast.error('Nenhuma modificação foi feita.');
         }
         if (event !== undefined) {
-            if (putTeamsLimit && parseInt(putTeamsLimit) < 1) {
+            if (changeEvent.putTeamsLimit && parseInt(changeEvent.putTeamsLimit) < 1) {
                 toast.error('Número de vagas inválido');
                 return false;
             }
-            if (putLocation === '') {
-                setPutLocation(event?.location);
+            if (changeEvent.putLocation === '') {
+                changeEvent.putLocation = event?.location;
             }
-            if (putTeamsLimit === '') {
-                setPutName(event?.teamsLimit);
+            if (changeEvent.putTeamsLimit === '') {
+                changeEvent.putTeamsLimit = event?.teamsLimit;     
             }
-            if (putDescription === '') {
-                setPutDescription(event?.description);
+            if (changeEvent.putDescription === '') {
+                changeEvent.putDescription = event?.description;
             }
-            if (putName === '') {
-                setPutName(event?.name);
+            if (changeEvent.putName === '') {
+                changeEvent.putName = event?.name;
             }
-            if (putDay !== '') {
-                let partesData = putDay.split("-");
+            if (changeEvent.putDay !== '') {
+                let partesData = changeEvent.putDay.split("-");
                 let dataFormatada = new Date(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2]));
                 if (parseInt(partesData[0]) > 2023) {
                     toast.error('Insira uma data mais recente.');
@@ -134,24 +145,24 @@ export const MeusEventos = () => {
                 }
             }
 
-            console.log([{ putName, putDay, putTime, putLocation, putTeamsLimit, putDescription, putSportId }])
+
             const response = await api.put(`/events/${event?.id}`, {
-                name: putName,
-                day: putDay !== '' ? putDay : event?.day,
-                time: putTime !== '' ? putTime : event?.time,
-                location: putLocation,
-                teamsLimit: putTeamsLimit ? parseInt(putTeamsLimit) : 0,
-                description: putDescription,
+                name: changeEvent.putName,
+                day: changeEvent.putDay !== '' ? changeEvent.putDay : event?.day,
+                time: changeEvent.putTime !== '' ? changeEvent.putTime : event?.time,
+                location: changeEvent.putLocation,
+                teamsLimit: changeEvent.putTeamsLimit ? parseInt(changeEvent.putTeamsLimit) : 0,
+                description: changeEvent.putDescription,
                 sportId: putSportId,
             });
             toast.success('Alterações salvas!');
             setAttInfos(!attInfos);
             setOpenModal(false);
-            setPutDescription('');
-            setPutLocation('');
-            setPutName('');
-            setPutDay('');
-            setPutTime('');
+            changeEvent.putDescription = '';
+            changeEvent.putLocation = '';
+            changeEvent.putName = '';
+            changeEvent.putDay = '';
+            changeEvent.putTime = '';
         }
     }
 
@@ -184,11 +195,11 @@ export const MeusEventos = () => {
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
-                                setPutDescription('');
-                                setPutLocation('');
-                                setPutName('');
-                                setPutDay('');
-                                setPutTime('');
+                                changeEvent.putDescription = '';
+                                changeEvent.putLocation = '';
+                                changeEvent.putName = '';
+                                changeEvent.putDay = '';
+                                changeEvent.putTime = '';
                             }}>Fechar</ModalButton>
                             <ModalButton onClick={() => setAlterarModal(true)}>Editar informações</ModalButton>
                         </ModalContentInputs>
@@ -199,25 +210,25 @@ export const MeusEventos = () => {
                         <ModalContentInputs onSubmit={handleSubmit}>
                             <DisplayFlexInputs>
                                 <span><strong>Nome: </strong></span>
-                                <Nome placeholder={event?.name} type="text" value={putName} onChange={(e) => setPutName(e.target.value)} />
+                                <Nome placeholder={event?.name} type="text"  onChange={(e) => changeEvent.putName = e.target.value} />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Data/Hora: </strong></span>
-                                <Data value={putDay} onChange={(e) => { setPutDay(e.target.value); }} type="date" />
-                                <Hora value={putTime} onChange={(e) => { setPutTime(e.target.value); }} type="time" />
+                                <Data  onChange={(e) => { changeEvent.putDay = e.target.value }} type="date" />
+                                <Hora  onChange={(e) => { changeEvent.putTime = e.target.value }} type="time" />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Local: </strong></span>
-                                <Local value={putLocation} onChange={(e) => setPutLocation(e.target.value)} type="text" placeholder={event?.location} />
+                                <Local  onChange={(e) => changeEvent.putLocation = e.target.value} type="text" placeholder={event?.location} />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <span><strong>Vagas: </strong></span>
-                                <Vagas value={putTeamsLimit} onChange={(e) => setPutTeamsLimit(e.target.value)} placeholder='Valor' type="number" />
+                                <Vagas  onChange={(e) => changeEvent.putTeamsLimit = e.target.value} placeholder='Valor' type="number" />
                             </DisplayFlexInputs>
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao value={putDescription} onChange={(e) => setPutDescription(e.target.value)} placeholder={event?.description} />
+                                <Descricao  onChange={(e) => changeEvent.putDescription = e.target.value} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -226,11 +237,11 @@ export const MeusEventos = () => {
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
-                                setPutDescription('');
-                                setPutLocation('');
-                                setPutName('');
-                                setPutDay('');
-                                setPutTime('');
+                                changeEvent.putDescription = '';
+                                changeEvent.putLocation = '';
+                                changeEvent.putName = '';
+                                changeEvent.putDay = '';
+                                changeEvent.putTime = '';
                             }}>Fechar</ModalButton>
                             <ModalButton onClick={() => { setAlterarModal(false) }}>Voltar</ModalButton>
 
@@ -261,11 +272,11 @@ export const MeusEventos = () => {
                             <ModalButton onClick={() => {
                                 setOpenModal(false);
                                 setAlterarModal(false);
-                                setPutDescription('');
-                                setPutLocation('');
-                                setPutName('');
-                                setPutDay('');
-                                setPutTime('');
+                                changeEvent.putDescription = '';
+                                changeEvent.putLocation = '';
+                                changeEvent.putName = '';
+                                changeEvent.putDay = '';
+                                changeEvent.putTime = '';
                             }}>Fechar</ModalButton>
 
                         </ModalContentInputs>

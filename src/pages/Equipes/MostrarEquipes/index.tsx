@@ -80,7 +80,6 @@ export const MostrarEquipes = () => {
 
         const getTeams = async () => {
             const response = await api.get('/teams');
-            console.log(response.data)
             setTeams(response.data);
         }
         getTeams();
@@ -94,7 +93,6 @@ export const MostrarEquipes = () => {
     }, [])
 
     const sendInvitation = async () => {
-        console.log(team)
         if (auth.user.id === team?.createdBy) {
             if (team) {
                 const response = await api.post('/users/teamInvitation', {
@@ -111,7 +109,6 @@ export const MostrarEquipes = () => {
             userId: auth.user.id,
             invitation: "send"
         });
-        console.log(response)
         toast.success("Solicitação enviada!")
         setOpenModal(false)
     }
@@ -135,7 +132,7 @@ export const MostrarEquipes = () => {
                     {<div>
                         <span><strong>Administrador:</strong></span>
 
-                        <p>{team?.users[0] ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
+                        <p>{team?.createdBy ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
 
                         <span><strong>Equipe:</strong></span>
                         {team?.users?.map((jogador, key) =>
