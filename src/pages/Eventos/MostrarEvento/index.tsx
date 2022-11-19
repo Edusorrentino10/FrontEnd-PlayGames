@@ -84,6 +84,9 @@ export const MostrarEvento = () => {
     const [allVisitante, setAllVisitante] = useState<any>();
     const [allCasa, setAllCasa] = useState<any>();
 
+    const [adminCurrentCasa, setAdminCurrentCasa] = useState<any>()
+    const [adminCurrentVisitante, setAdminCurrentVisitante] = useState<any>()
+
 
     useEffect(() => {
 
@@ -136,6 +139,8 @@ export const MostrarEvento = () => {
             setAttInfos(!attInfos)
             toast.success("Time adicionado!")
             setOpenModal(false);
+            setAdminCurrentCasa(undefined);
+            setAdminCurrentVisitante(undefined)
         };
     };
 
@@ -150,21 +155,41 @@ export const MostrarEvento = () => {
             setTeamVisitante(teamsAdm[0].id)
         }
 
-        if (event?.teams[0].id === teamVisitante) {
+        if (event?.teams[0]?.id === teamVisitante) {
             return toast.error('Equipe já está inscrita!')
         }
 
         allTeams.map((team: any) => team.id === teamVisitante ? setAllVisitante(team) : '')
-
-        if (event?.sportId !== allVisitante.sportId) {
-            return toast.error('Modalidade da equipe é diferente do evento.');
+        if (allVisitante) {
+            if (event?.sportId !== allVisitante.sportId) {
+                return toast.error('Modalidade da equipe é diferente do evento.');
+            }
         }
 
+        let usersIdTimeCasa: any = [];
+        let usersIdTimeVisitante: any = [];
+        allVisitante.users?.map((user: any) => usersIdTimeVisitante.push(user.id));
+        event?.teams[0]?.users?.map((user: any) => usersIdTimeCasa.push(user.id));
+        let checkMatch: any = [];
+        for (let arr of usersIdTimeCasa) {
+            let interseccao = usersIdTimeVisitante.filter((x: any) => arr.includes(x))
+            if (checkMatch.length < interseccao.length) {
+                checkMatch = interseccao
+            }
+        }
+
+        if (checkMatch.length > 0) {
+            return toast.error('Há um jogador nessa equipe que já joga esse evento!')
+        };
+        checkMatch = [];
+
         if (event && teamVisitante) {
-            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`);
+            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`); 
             setAttInfos(!attInfos)
             toast.success("Time adicionado!")
             setOpenModal(false);
+            setAdminCurrentCasa(undefined);
+            setAdminCurrentVisitante(undefined)
         };
     };
 
@@ -230,9 +255,11 @@ export const MostrarEvento = () => {
                         }
                     </legend>
                     <span><strong>Administrador:</strong></span>
-                    {
-                        <p>{jogadoresDoTimeA && jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                    {event?.teams[0]?.users?.map((jogador: any) => setAdminCurrentCasa(jogador))}
+                    {adminCurrentCasa !== undefined &&
+                        <p>{' 👤 ' + adminCurrentCasa?.name + ' 📩 ' + adminCurrentCasa?.email}</p>
                     }
+                    <br />
                     <span><strong>Equipe:</strong></span>
                     {
                         jogadoresDoTimeA ?
@@ -265,9 +292,12 @@ export const MostrarEvento = () => {
                         }
                     </legend>
                     <span><strong>Administrador:</strong></span>
-                    {
-                        <p>{jogadoresDoTimeB && jogadoresDoTimeB[0] ? jogadoresDoTimeB[0] : ''}</p>
+
+                    {event?.teams[1]?.users?.map((jogador: any) => setAdminCurrentVisitante(jogador))}
+                    {adminCurrentVisitante !== undefined &&
+                        <p>{' 👤 ' + adminCurrentVisitante?.name + ' 📩 ' + adminCurrentVisitante?.email}</p>
                     }
+                    <br />
                     <span><strong>Equipe:</strong></span>
                     {
                         jogadoresDoTimeB ?
@@ -289,7 +319,7 @@ export const MostrarEvento = () => {
                     }
                 </fieldset>
             </DivEquipes>
-            <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+            <ModalButton onClick={() => { setOpenModal(false); setAdminCurrentCasa(undefined); setAdminCurrentVisitante(undefined) }}>Fechar</ModalButton>
         </Modal>
     )
 
@@ -316,6 +346,8 @@ export const MostrarEvento = () => {
                     events.map((evento, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
+                                setAdminCurrentCasa(undefined);
+                                setAdminCurrentVisitante(undefined)
                                 setOpenModal(true)
                                 setEvent(evento)
                             }
@@ -351,7 +383,7 @@ export const MostrarEvento = () => {
                                 </DisplayFlex>
                                 <LocalEvento>{evento.location}</LocalEvento>
                                 <ModalidadeEvento>{evento.Sport?.name}
-                                {
+                                    {
                                         evento.Sport.name === 'Futebol' ? <GiSoccerBall style={{ marginLeft: '1rem' }} /> :
                                             evento.Sport.name === 'Basquete' ? <GiBasketballBall style={{ marginLeft: '1rem' }} /> :
                                                 evento.Sport.name === 'Vôlei' ? <GiVolleyballBall style={{ marginLeft: '1rem' }} /> :

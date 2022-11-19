@@ -104,6 +104,7 @@ export const MinhasEquipes = () => {
 
     const [alterarModal, setAlterarModal] = useState(false);
 
+    const [adminCurrent, setAdminCurrent] = useState<any>()
 
 
 
@@ -173,6 +174,7 @@ export const MinhasEquipes = () => {
                 });
             }
             toast.success("Convite aceito!")
+            setAttInfos(!attInfos);
             setOpenModal(false)
             setInvitations(invitations.filter(x => x.id !== cvt?.id))
             window.open(`mailto:${cvt?.email}
@@ -193,6 +195,7 @@ export const MinhasEquipes = () => {
                 });
             }
             toast.warn("Convite rejeitado!")
+            setAttInfos(!attInfos);
             setOpenModal(false)
         } catch (error) {
             console.log(error)
@@ -275,7 +278,8 @@ export const MinhasEquipes = () => {
                                 <br />
                                 <span><strong>Administrador: </strong></span>
 
-                                <p>{jogadoresDoTimeA[0] ? jogadoresDoTimeA[0] : ''}</p>
+                                {event?.users?.map((jogador: any) => setAdminCurrent(jogador))}
+                                <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
 
                                 <br />
                                 <span><strong>Equipe: </strong></span>

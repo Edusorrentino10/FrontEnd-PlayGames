@@ -54,10 +54,7 @@ export const CriarEquipe = () => {
         console.log(auth.user.id)
         console.log(sportSelected)
         console.log(typeof auth.user.id)
-        // if (parseInt(vagas) < 1) {
-        //     toast.error('Número de vagas inválido');
-        //     return false;
-        // }
+
         if (sportSelected === '') {
             toast.error('Escolha uma modalidade.');
             return false;
@@ -70,6 +67,14 @@ export const CriarEquipe = () => {
             createdBy: auth.user.id
         });
         setEvents(response.data);
+
+
+        const response2 = await api.post('/users/teamInvitation', {
+            teamId: response.data.id,
+            userId: auth.user.id,
+            invitation: "accepted"
+        });
+
         navigate('/equipes')
     }
 

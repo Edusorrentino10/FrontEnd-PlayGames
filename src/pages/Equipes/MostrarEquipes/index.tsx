@@ -76,6 +76,8 @@ export const MostrarEquipes = () => {
     const [openModal, setOpenModal] = useState(false);
     const [filter, setFilter] = useState('')
 
+    const [adminCurrent, setAdminCurrent] = useState<any>()
+
     useEffect(() => {
 
         const getTeams = async () => {
@@ -94,22 +96,21 @@ export const MostrarEquipes = () => {
 
     const sendInvitation = async () => {
         if (auth.user.id === team?.createdBy) {
-            if (team) {
-                const response = await api.post('/users/teamInvitation', {
-                    teamId: team.id,
-                    userId: auth.user.id,
-                    invitation: "accepted"
-                });
-            }
-            return toast.success('Entrou na equipe com sucesso.');
+            return toast.error('Já está na equipe!');
         }
-
+        let auxBoolean = false;
+        team?.users.map((user) => user.id === auth.user.id ? auxBoolean = true : '')
+        if (auxBoolean) {
+            return toast.error('Já está na equipe!');
+        }
+        auxBoolean = false;
         const response = await api.post('/users/teamInvitation', {
             teamId: team?.id,
             userId: auth.user.id,
             invitation: "send"
         });
         toast.success("Solicitação enviada!")
+        setAdminCurrent(undefined)
         setOpenModal(false)
     }
 
@@ -129,21 +130,25 @@ export const MostrarEquipes = () => {
                     <legend style={{ border: '3px solid #ffa562', padding: '10px', fontWeight: 'bold', color: '#e0e0e0', backgroundColor: '#ff7815' }}>
                         {team?.name}
                     </legend>
-                    {<div>
+                    <>
                         <span><strong>Administrador:</strong></span>
 
-                        <p>{team?.createdBy ? ' 👤 ' + team?.users[0]?.name + ' 📩 ' + team?.users[0]?.email : ''}</p>
 
+                        {team?.users?.map((jogador: any) => setAdminCurrent(jogador))}
+                        {adminCurrent !== undefined &&
+                            <p>{' 👤 ' + adminCurrent?.name + ' 📩 ' + adminCurrent?.email}</p>
+                        }
+                        <br />
                         <span><strong>Equipe:</strong></span>
                         {team?.users?.map((jogador, key) =>
                             <p key={key}>{' 👤 ' + jogador.name + ' 📩 ' + jogador.email}</p>
                         )}
-                    </div>}
+                    </>
                 </fieldset>
             </DivEquipes>
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <ModalButton onClick={() => sendInvitation()}>Enviar Solicitação</ModalButton>
-                <ModalButton onClick={() => setOpenModal(false)}>Fechar</ModalButton>
+                <ModalButton onClick={() => { setOpenModal(false); setAdminCurrent(undefined) }}>Fechar</ModalButton>
             </div>
         </Modal>
     )
@@ -168,6 +173,7 @@ export const MostrarEquipes = () => {
                     teams.map((team, key) =>
                         <div key={key}>
                             <Evento onClick={() => {
+                                setAdminCurrent(undefined)
                                 setOpenModal(true)
                                 setTeam(team)
                             }
@@ -191,6 +197,7 @@ export const MostrarEquipes = () => {
                     teams.map((team, key) => team.name.toLowerCase().startsWith(filter.toLowerCase()) &&
                         <div key={key}>
                             <Evento onClick={() => {
+                                setAdminCurrent(undefined)
                                 setOpenModal(true)
                                 setTeam(team)
                             }
