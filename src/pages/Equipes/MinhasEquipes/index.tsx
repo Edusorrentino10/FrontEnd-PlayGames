@@ -330,7 +330,7 @@ export const MinhasEquipes = () => {
                             <DisplayFlexInputs>
                                 <br />
                                 <span><strong>Descrição: </strong></span>
-                                <Descricao onChange={(e) => changeTeam.putDescription} placeholder={event?.description} />
+                                <Descricao onChange={(e) => changeTeam.putDescription = e.target.value} placeholder={event?.description} />
                                 <button>Salvar Alterações</button>
                             </DisplayFlexInputs>
                             <div style={{ display: 'flex', justifyContent: 'center' }}>
