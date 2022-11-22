@@ -230,6 +230,14 @@ export const InscreverVisitanteButton = styled.button`
 `;
 
 
+export const SairEventoVisitanteButton = styled.button`
+    margin: auto;
+`;
+
+export const SairEventoCasaButton = styled.button`
+    margin: auto;
+`;
+
 export const SelectCasa = styled.select<{ isActive: boolean }>`
     display: ${props => props.isActive ? 'flex' : 'none'};
 `;

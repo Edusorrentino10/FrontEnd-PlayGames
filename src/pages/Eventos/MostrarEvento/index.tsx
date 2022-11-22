@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Header } from '../../../components/Header';
-import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa, SportModal } from './styles';
+import { Container, Content, CriarEventoButton, DisplayFlex, Evento, EventosContent, HorarioEvento, LocalEvento, ModalidadeEvento, VagasEvento, NomeEvento, Title, ModalContent, TitleModal, ModalButton, HorarioModal, ImgModal, DivEquipes, DescricaoEvento, InscreverCasaButton, SelectCasa, SelectVisitante, InscreverVisitanteButton, ConfirmarButtonVisitante, ConfirmarButtonCasa, SportModal, SairEventoVisitanteButton, SairEventoCasaButton } from './styles';
 import { GiBasketballBall, GiSoccerBall } from 'react-icons/gi';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { RiComputerLine } from 'react-icons/ri';
@@ -169,7 +169,7 @@ export const MostrarEvento = () => {
 
         let usersIdTimeCasa: any = [];
         let usersIdTimeVisitante: any = [];
-        allVisitante.users?.map((user: any) => usersIdTimeVisitante.push(user.id));
+        allVisitante?.users?.map((user: any) => usersIdTimeVisitante.push(user.id));
         event?.teams[0]?.users?.map((user: any) => usersIdTimeCasa.push(user.id));
         let checkMatch: any = [];
         for (let arr of usersIdTimeCasa) {
@@ -185,7 +185,7 @@ export const MostrarEvento = () => {
         checkMatch = [];
 
         if (event && teamVisitante) {
-            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`); 
+            const response = await api.post(`/events/addTeam?eventId=${event.id}&teamId=${teamVisitante}`);
             setAttInfos(!attInfos)
             toast.success("Time adicionado!")
             setOpenModal(false);
@@ -230,6 +230,33 @@ export const MostrarEvento = () => {
     }
 
 
+    const handleRemoveEquipeCasa = async () => {
+
+        if (event && event.teams[0]) {
+            console.log(event?.id)
+            console.log(event?.teams[0]?.id)
+            const response = await api.post(`/events/removeTeam?eventId=${event.id}&teamId=${event.teams[0].id}`);
+            setAttInfos(!attInfos)
+            setOpenModal(false);
+            setAdminCurrentCasa(undefined);
+            setAdminCurrentVisitante(undefined)
+        }
+    }
+
+    const handleRemoveEquipeVisitante = async () => {
+        if (event && event.teams[1]) {
+            const response = await api.post(`/events/removeTeam?eventId=${event.id}&teamId=${event.teams[1].id}`);
+            setAttInfos(!attInfos)
+            setOpenModal(false);
+            setAdminCurrentCasa(undefined);
+            setAdminCurrentVisitante(undefined)
+        }
+    }
+
+
+
+
+
     const ModalEvents = () => (
         <Modal
             isOpen={openModal}
@@ -270,6 +297,11 @@ export const MostrarEvento = () => {
                             )) : ''
                     }
                     {
+                        jogadoresDoTimeA ? event?.teams[0]?.createdBy === auth.user.id ?
+                            <SairEventoCasaButton onClick={(e) => { e.preventDefault(); handleRemoveEquipeCasa() }}>Remover Equipe</SairEventoCasaButton>
+                            : '' : ''
+                    }
+                    {
                         !event?.teams[0] ?
                             <>
                                 <InscreverCasaButton onClick={(e) => { e.preventDefault(); setCasaActive(!casaActive) }}>{casaActive ? 'Cancelar Inscrição' : 'Inscrever Equipe'}</InscreverCasaButton>
@@ -298,6 +330,7 @@ export const MostrarEvento = () => {
                     {event?.teams[1]?.users?.map((jogador: any) => event?.createdBy === jogador.id ? setAdminCurrentVisitante(jogador) : '')}
                     {adminCurrentVisitante !== undefined &&
                         <p>{' 👤 ' + adminCurrentVisitante?.name + ' 📩 ' + adminCurrentVisitante?.email}</p>
+
                     }
                     <br />
                     <span><strong>Equipe:</strong></span>
@@ -306,6 +339,11 @@ export const MostrarEvento = () => {
                             jogadoresDoTimeB.map((player: any, key: any) => (
                                 <p key={key}>{player}</p>
                             )) : ''
+                    }
+                    {
+                        jogadoresDoTimeB ? event?.teams[1]?.createdBy === auth.user.id ?
+                            <SairEventoVisitanteButton onClick={(e) => { e.preventDefault(); handleRemoveEquipeVisitante() }}>Remover Equipe</SairEventoVisitanteButton>
+                            : '' : ''
                     }
                     {
                         !event?.teams[1] ?
