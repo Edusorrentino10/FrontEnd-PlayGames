@@ -236,20 +236,20 @@ export const MostrarEvento = () => {
             console.log(event?.id)
             console.log(event?.teams[0]?.id)
             const response = await api.post(`/events/removeTeam?eventId=${event.id}&teamId=${event.teams[0].id}`);
-            setAttInfos(!attInfos)
             setOpenModal(false);
             setAdminCurrentCasa(undefined);
             setAdminCurrentVisitante(undefined)
+            setAttInfos(!attInfos)
         }
     }
 
     const handleRemoveEquipeVisitante = async () => {
         if (event && event.teams[1]) {
             const response = await api.post(`/events/removeTeam?eventId=${event.id}&teamId=${event.teams[1].id}`);
-            setAttInfos(!attInfos)
             setOpenModal(false);
             setAdminCurrentCasa(undefined);
             setAdminCurrentVisitante(undefined)
+            setAttInfos(!attInfos)
         }
     }
 
@@ -284,7 +284,7 @@ export const MostrarEvento = () => {
                     </legend>
                     <span><strong>Administrador:</strong></span>
                     {/* {event?.teams[0]?.users?.map((jogador: any) => setAdminCurrentCasa(jogador))} */}
-                    {event?.teams[0]?.users?.map((jogador: any) => event?.createdBy === jogador.id ? setAdminCurrentCasa(jogador) : '')}
+                    {event?.teams[0]?.users?.map((jogador: any) => event?.teams[0]?.createdBy === jogador.id ? setAdminCurrentCasa(jogador) : '')}
                     {adminCurrentCasa !== undefined &&
                         <p>{' 👤 ' + adminCurrentCasa?.name + ' 📩 ' + adminCurrentCasa?.email}</p>
                     }
@@ -327,7 +327,7 @@ export const MostrarEvento = () => {
                     </legend>
                     <span><strong>Administrador:</strong></span>
 
-                    {event?.teams[1]?.users?.map((jogador: any) => event?.createdBy === jogador.id ? setAdminCurrentVisitante(jogador) : '')}
+                    {event?.teams[1]?.users?.map((jogador: any) => event?.teams[1]?.createdBy === jogador.id ? setAdminCurrentVisitante(jogador) : '')}
                     {adminCurrentVisitante !== undefined &&
                         <p>{' 👤 ' + adminCurrentVisitante?.name + ' 📩 ' + adminCurrentVisitante?.email}</p>
 
